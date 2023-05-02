@@ -9,6 +9,7 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\widgets\Menu;
 
 AppAsset::register($this);
 
@@ -29,42 +30,57 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <body>
 <?php $this->beginBody() ?>
 <div class="wrapper">
-	<!-- TODO change menu on widget and make components work ( add into system for redirect) -->
 	<header id="header" class="header">
-		<div class="header__menu">
+	<div class="header__menu">
 		<div class="menu">
 			<div class="burger-menu">
-				<a href="#" class="burger-menu__btn">
+				<a href="" class="burger-menu__btn">
 					<span class="burger-menu__lines"></span>
 				</a>
 				<nav class="burger-menu__nav">
-					<a class="burger-menu__link" href="../layout/about.html">О нас</a>
-					<a class="burger-menu__link" href="../layout/listProperNames.html">Список имен собственных</a>
-					<a class="burger-menu__link" href="../layout/extendedSearch.html">Расширенный поиск</a>
-					<a class="burger-menu__link" href="../layout/addNewPropername.html">Добавить новое имя собственное</a>
-					<a class="burger-menu__link" href="../layout/auths.html">Авторизоваться</a>
-					<a class="burger-menu__link" href="../layout/registr.html">Зарегистрироваться</a>
+					<?php
+						echo Menu::widget([
+							'options' => ['class' => ''],
+							'items' => [
+								['label' => 'О нас', 'url' => ['site/about']],
+								['label' => 'Список имен собственных', 'url' => ['site/listProperNames']],
+								['label' => 'Расширенный поиск', 'url' => ['site/extendedSearch']],
+								Yii::$app->user->isGuest? ['label' => 'Login', 'url' => ['/site/login']] :		
+								['label' => 'Добавить новую информацию', 'url' => ['site/addNewPropername']],
+								],
+								'itemOptions'=>['class'=>'burger-menu__link']
+							]);
+					?>
 				</nav>
 				<div class="burger-menu__overlay"></div>
 			</div>
 			<div class="menu__navbar">
 				<nav class="menu__nav">
-					<a class="menu__link" href="../layout/about.html">О нас</a>
-					<a class="menu__link" href="../layout/listProperNames.html">Список имен собственных</a>
-					<a class="menu__link" href="../layout/extendedSearch.html">Расширенный поиск</a>
-					<a class="menu__link" href="../layout/addNewPropername.html">Добавить новое имя собственное</a>
+					<?php
+						echo Menu::widget([
+							'options' => ['class' => 'navbar-nav'],
+							'items' => [
+								['label' => 'О нас', 'url' => ['site/about']],
+								['label' => 'Список имен собственных', 'url' => ['site/extendedSearch']],
+								['label' => 'Расширенный поиск', 'url' => ['site/login']],
+								Yii::$app->user->isGuest? [] :		
+								['label' => 'Добавить новую информацию', 'url' => ['site/login']],
+								],
+								'itemOptions'=>['class'=>'menu__link']
+							]);
+					?>
 				</nav>
 			</div>
 		</div>
 		<div class="header__auths">
-			<div class="login__auth menu__link">
-				<a class="login__btn" href="">Авторизоваться</a>
+			<div class="login__auth">
+				<a class='login__btn' href=''>Авторизоваться</a>	
 			</div>
 		</div>
 		</div>
 		<div class="sub-header">
 		<div class="sub-header__image">
-			<a href=""><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
+			<a href="index"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
 		</div>
 		<div class="sub-header__title">
 			<h1>
@@ -83,7 +99,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 	</header>
 
 	<main class="main">
-		<div class="container">
+		<div class="container content">
 			<?php if (!empty($this->params['breadcrumbs'])): ?>
 					<?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
 			<?php endif ?>
@@ -93,7 +109,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 	</main>
 
 	<footer id="footer" class="footer">
-	<div class="footer__container container footer">
+		<div class="footer__container container footer">
 		<div class="copyright">
 				&copy; 2023 www.proper-names-app - All Rights Reserved.
 		</div>
@@ -104,7 +120,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 			<img class="socialmedia__vk-icon" src="../Telegram_logo.png" alt="">
 			<img class="socialmedia__tg-icon" src="../vkIcon.png" alt="">
 		</div>
-	</div>
+		</div>
 	</footer>
 </div>
 <?php $this->endBody() ?>
