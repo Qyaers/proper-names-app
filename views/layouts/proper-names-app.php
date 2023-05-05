@@ -8,8 +8,9 @@ use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
+use yii\bootstrap5\ActiveForm;
 use yii\widgets\Menu;
+use yii\bootstrap\Modal;
 
 AppAsset::register($this);
 
@@ -31,70 +32,84 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php $this->beginBody() ?>
 <div class="wrapper">
 	<header id="header" class="header">
-	<div class="header__menu">
-		<div class="menu">
-			<div class="burger-menu">
-				<a href="" class="burger-menu__btn">
-					<span class="burger-menu__lines"></span>
-				</a>
-				<nav class="burger-menu__nav">
+		<div class="header__menu">
+			<div class="menu">
+				<div class="burger-menu">
+					<a href="" class="burger-menu__btn">
+						<span class="burger-menu__lines"></span>
+					</a>
+					<nav class="burger-menu__nav">
+						<?php
+							echo Menu::widget([
+								'options' => ['class' => ''],
+								'items' => [
+									['label' => 'О нас', 'url' => ['site/about']],
+									['label' => 'Список имен собственных', 'url' => ['site/list-proper-names']],
+									['label' => 'Расширенный поиск', 'url' => ['site/extended-search']],
+									// Yii::$app->user->isGuest? [] :		
+									['label' => 'Добавить новую информацию', 'url' => ['site/add-new-proper-name']],
+									],
+									'itemOptions'=>['class'=>'burger-menu__link']
+								]);
+						?>
+					</nav>
+					<div class="burger-menu__overlay"></div>
+				</div>
+				<div class="menu__navbar">
+					<nav class="menu__nav">
+						<?php
+							echo Menu::widget([
+								'options' => ['class' => 'navbar-nav'],
+								'items' => [
+									['label' => 'О нас', 'url' => ['site/about']],
+									['label' => 'Список имен собственных', 'url' => ['site/list-proper-names']],
+									['label' => 'Расширенный поиск', 'url' => ['site/extended-search']],
+									// Yii::$app->user->isGuest? [] :		
+									['label' => 'Добавить новую информацию', 'url' => ['site/add-new-proper-name']],
+									],
+									'itemOptions'=>['class'=>'menu__link']
+								]);
+						?>
+					</nav>
+				</div>
+			</div>
+			<div class="header__auths">
+				<div class="login__auth">
 					<?php
-						echo Menu::widget([
-							'options' => ['class' => ''],
-							'items' => [
-								['label' => 'О нас', 'url' => ['site/about']],
-								['label' => 'Список имен собственных', 'url' => ['site/listProperNames']],
-								['label' => 'Расширенный поиск', 'url' => ['site/extendedSearch']],
-								Yii::$app->user->isGuest? ['label' => 'Login', 'url' => ['/site/login']] :		
-								['label' => 'Добавить новую информацию', 'url' => ['site/addNewPropername']],
-								],
-								'itemOptions'=>['class'=>'burger-menu__link']
-							]);
-					?>
-				</nav>
-				<div class="burger-menu__overlay"></div>
+						echo Nav::widget([
+							'options' => ['class' => 'login-auth__btn navbar-nav'],
+									'items' =>[
+							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['#modal-window']] 
+							: //['label' => Yii::$app->user->identity->login, 'url' => '/site/logout']
+							'<a class="">'
+							. Html::beginForm(['/site/logout'])
+							. Html::submitButton(
+								Yii::$app->user->identity->login .'(Logout)',
+								['class' => 'nav-link btn btn-link logout ']
+							)
+							. Html::endForm()
+							.'</a>'
+						]])?>
+				</div>
 			</div>
-			<div class="menu__navbar">
-				<nav class="menu__nav">
-					<?php
-						echo Menu::widget([
-							'options' => ['class' => 'navbar-nav'],
-							'items' => [
-								['label' => 'О нас', 'url' => ['site/about']],
-								['label' => 'Список имен собственных', 'url' => ['site/extendedSearch']],
-								['label' => 'Расширенный поиск', 'url' => ['site/login']],
-								Yii::$app->user->isGuest? [] :		
-								['label' => 'Добавить новую информацию', 'url' => ['site/login']],
-								],
-								'itemOptions'=>['class'=>'menu__link']
-							]);
-					?>
-				</nav>
 			</div>
-		</div>
-		<div class="header__auths">
-			<div class="login__auth">
-				<a class='login__btn' href=''>Авторизоваться</a>	
+			<div class="sub-header">
+			<div class="sub-header__image">
+				<a href="index"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
 			</div>
-		</div>
-		</div>
-		<div class="sub-header">
-		<div class="sub-header__image">
-			<a href="index"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
-		</div>
-		<div class="sub-header__title">
-			<h1>
-				Словарь имен собственных русского языка
-			</h1>
-		</div>
-		<div class="search-field">
-			<div class="search-field-__input">
-				<input class="search-field__input" type="text" maxlength="44">
+			<div class="sub-header__title">
+				<h1>
+					Словарь имен собственных русского языка
+				</h1>
 			</div>
-			<div class="search-field__btn">
-				<image src="../searchButtonIcon.png" class="btn-search"></image>
+			<div class="search-field">
+				<div class="search-field-__input">
+					<input class="search-field__input" type="text" maxlength="44">
+				</div>
+				<div class="search-field__btn">
+					<image src="../searchButtonIcon.png" class="btn-search"></image>
+				</div>
 			</div>
-		</div>
 		</div>
 	</header>
 
@@ -123,6 +138,75 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 		</div>
 	</footer>
 </div>
+<div id="modal-window" class="modal-window">
+	<div class="modal-window__body">
+		<div class="modal-window__content">
+			<div class="modal-window__title">
+				<div class="modal-window__title-name">Логин</div>
+				<a class="modal-window__close" href="#">X</a>		
+			</div>
+			<div class="modal-window__form">
+				<div class="login-field">
+					<p class="field-title">Логин</p>
+					<input class="field__input" type="text" name="" id="">
+				</div>
+				<div class="password-field">
+					<p class="field-title">Пароль</p>
+					<input class="field__input" type="text" name="" id="">
+				</div>
+
+				<div class="sub-btns">
+					<div class="remember-user__btn">
+						<input class="remember-checkbox__btn" type="checkbox" name="" id=""></input><p style="font-size: 40px;">Запомнить меня</p>
+					</div>
+					<div class="forgot-password__btn">
+						<a href="#" style="font-size: 40px;">Забыли пароль?</a>
+					</div>
+				</div>
+			</div>
+			<div class="btns-auths">
+				<input class="login__btn" type="button" value="Войти">
+				<input class="reg__btn" type="button" value="Зарегестрироваться">
+			</div>
+		</div>
+	</div>
+</div>
+	
+	<!-- <div id="modal-window modal-window-registr" class="modal-window">
+		<div class="modal-window__body">
+			<div class="modal-window__content">
+				<div class="modal-window__title">
+					<div class="modal-window__title-name">Логин</div>
+					<a class="modal-window__close" href="#">X</a>		
+				</div>
+				<div class="modal-window__form">
+					<div class="login-field">
+						<p class="field-title">Логин</p>
+						<input class="field__input" type="text" name="" id="">
+					</div>
+					<div class="password-field">
+						<p class="field-title">Пароль</p>
+						<input class="field__input" type="text" name="" id="">
+					</div>
+					<div class="email">
+						<p class="field-title">Почта</p>
+						<input class="field__input" type="text" name="" id="">
+					</div>
+					<div class="sub-btns">
+						<div class="remember-user__btn">
+							<input class="remember-checkbox__btn" type="checkbox" name="" id=""></input><p style="font-size: 40px;">Запомнить меня</p>
+						</div>
+						<div class="forgot-password__btn">
+							<a href="#" style="font-size: 40px;">Забыли пароль?</a>
+						</div>
+					</div>
+				</div>
+				<div class="btns-auths">
+					<input class="login__btn" type="button" value="Войти">
+					<input class="reg__btn" type="button" value="Зарегестрироваться">
+				</div>
+			</div>
+		</div> -->
 <?php $this->endBody() ?>
 </body>
 </html>

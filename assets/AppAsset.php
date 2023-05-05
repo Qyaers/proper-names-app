@@ -17,17 +17,19 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
-    public $css = [
-		  'css/css.css'
-    ];
-    public $js = [
-		'js/js.js',
-		'js/fileParser,js'
-    ];
-    public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap5\BootstrapAsset'
-    ];
+	public $basePath = '@webroot';
+	public $baseUrl = '@web';
+	public $css = [
+		'css/css.css',
+		'css/modalWindow.css'
+	];
+	public $js = [
+	'js/js.js',
+	'js/fileParser.js',
+	'modal-widow.js',
+	];
+	public $depends = [
+		'yii\web\YiiAsset',
+		'yii\bootstrap5\BootstrapAsset'
+	];
 }

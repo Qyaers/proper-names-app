@@ -1,0 +1,154 @@
+.modal-window {
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.5);
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	visibility: hidden;
+	overflow-y: auto;
+	overflow-x: hidden;
+	transition: all 0.8s ease 0s;
+}
+
+.modal-window:target{
+	opacity: 1;
+	visibility: visible;
+	transition: all 0.8s ease 0s;
+}
+.modal-window:target .modal-window__content{
+	transform: translate(0px,0px);
+	opacity: 1;
+}
+
+.modal-window__body {
+	min-height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.modal-window__content {
+	min-height: 800px;
+	width: 1000px;
+	margin: 0 auto;
+	background-color: #6462CF;
+	border-radius: 20px;
+	opacity: 0;
+	transition: all 0.8s ease 0s;
+	transform: translate(0px,-100%);
+
+}
+.modal-window__title-name{
+	display: flex	;
+	margin-left: 45%;
+	align-items: center;
+	margin-top: 20px;
+	color: rgb(255, 255, 255);
+}
+.modal-window__title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 879px;
+	margin: 0 auto;
+}
+.modal-window__title-name{
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 40px;
+	line-height: 48px;
+	display: flex;
+	align-items: center;
+	text-align: center;
+}
+.modal-window__form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0 auto;
+	justify-content: center;
+	width: 879px;
+}
+.modal-window__close {
+	display: flex;
+	cursor: pointer;
+	color: rgb(253, 252, 252);
+	font-size: 30px;
+	justify-content: end;
+}
+.modal-window__close:hover{
+	color: rgba(253, 252, 252, 0.318);
+}
+
+.field-title{
+	margin-top: 64px;
+	font-size: 40px;	
+}
+
+.field__input{
+	width: 879px;
+	height: 33px;
+}
+
+.sub-btns{
+	display: flex;
+	flex-direction: row;
+	width: 879px;
+	align-items: center;
+	left: 0;
+	margin-top: 30px;
+	justify-content: space-between;
+}
+
+
+.btns-auths {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0 auto;
+	margin-top: 50px;
+
+	width: 879px;
+}
+
+
+.remember-user__btn{
+	justify-content: center;
+	align-items: center;
+	display: flex;
+}
+
+.remember-checkbox__btn{
+	width: 57px;
+	height: 69px;
+	align-self: center;
+	margin-right: 10px;
+}
+
+.remember-checkbox__btn:checked {
+	background: #eee;
+	color: #aaa;
+}
+
+.forgot-password__btn {
+}
+
+.login__btn {
+	min-width: 200px;
+	min-height: 60px;
+	background: #D9D9D9;
+	border-radius: 30px;
+}
+.reg__btn {
+	min-width: 200px;
+	min-height: 60px;
+	background: #D9D9D9;
+	border-radius: 30px;
+}
+
+.modal-window-registr{
+	z-index: 1;
+}

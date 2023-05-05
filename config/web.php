@@ -21,7 +21,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\UserIdentity',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -43,14 +43,15 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+      //   Make url user friendly
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+				'enableStrictParsing' => false,
             'rules' => [
             ],
         ],
-        */
+        
     ],
     'params' => $params,
 ];
