@@ -11,5 +11,8 @@ $this->params['breadcrumbs'][] = $this->title;
 	<h1><?= Html::encode($this->title) ?></h1>
 	<p>
 	<code><?= __FILE__ ?></code>
+				<div class="file-selector"></div>
+				<input type="file" name="" class="file-selector-input" id="" accept=".txt, .xlsx, .csv">
+				<ul class="output"></ul>
 	</p>
 </div>

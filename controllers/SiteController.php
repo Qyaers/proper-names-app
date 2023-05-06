@@ -4,11 +4,15 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\db\ActiveRecord;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\SignupForm;
 use app\models\ContactForm;
+use app\models\User;
+
 
 class SiteController extends Controller
 {
@@ -89,7 +93,7 @@ class SiteController extends Controller
 
 		$model = new LoginForm();
 		if ($model->load(Yii::$app->request->post()) && $model->login()) {
-			return $this->goBack();
+			return $this->goBack(); 
 		}
 
 		$model->password = '';
@@ -108,6 +112,39 @@ class SiteController extends Controller
 		Yii::$app->user->logout();
 
 		return $this->goHome();
+	}
+
+	public function actionSignup()
+	{
+		if(!Yii::$app->user->isGuest){
+			return $this->goHome();
+		}
+
+		$model = new SignupForm();
+
+		if ($model->load(Yii::$app->request->post())) {
+
+			// $user = new User();			
+			// $user->login = $model->login;
+			// $user->email = $model->email;
+			// $user->password = $model->password;
+			// $user = new User();			
+			$login = $model->login;
+			$email = $model->email;
+			$password = $model->password;
+			
+			
+			Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
+				':login' => $login,
+				':email' => $email,
+				':password' => $password
+			])->execute();
+			return $this->goHome();
+		} 	
+
+		return $this->render('signup', [
+			'model' => $model,
+		]);
 	}
 
 	/**

@@ -14,9 +14,9 @@ class User extends ActiveRecord
 
 	public function rules () {
 		return [
-			[['login','password'],'required'],
+			[['login','password','email'],'required'],
 			[['login'],'string','max '=>15],
-			[['password','accesToken','authKey'],'string','max '=>32],
+			[['password','email','accesToken','authKey',],'string','max '=>32],
 		];
 	}
 

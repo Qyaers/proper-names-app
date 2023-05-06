@@ -6,42 +6,37 @@ use Yii;
 use yii\base\Model;
 
 /**
- * LoginForm is the model behind the login form.
- *
- * @property-read User|null $user
- *
+ * Signup form
  */
-class LoginForm extends Model
+class SignupForm extends Model
 {
+
 	public $login;
+	public $email;
 	public $password;
-	public $rememberMe = true;
-
-	private $_user = false;
-
 
 	/**
-	 * @return array the validation rules.
+	 * @inheritdoc
 	 */
 	public function rules()
 	{
 		return [
-			// username and password are both required
-			[['login', 'password'], 'required'],
-			// rememberMe must be a boolean value
-			['rememberMe', 'boolean'],
-			// password is validated by validatePassword()
-			['password', 'validatePassword'],
-		];
+			[['login'], 'trim'],
+			[['login'], 'required'],
+			[['login'], 'unique', 'targetClass' => '\app\models\UserIdentity', 'message' => 'This username has already been taken.'],
+			[['login'], 'string', 'min' => 2, 'max' => 255],
+			[['email'], 'trim'],
+			[['email'], 'required'],
+			[['email'], 'email'],
+			[['email'], 'string', 'max' => 255],
+			[['email'], 'unique', 'targetClass' => '\app\models\UserIdentity', 'message' => 'This email address has already been taken.'],
+			[['password'], 'required'],
+			[['password'], 'string', 'min' => 6],
+	  ];
 	}
 
-	/**
-	 * Validates the password.
-	 * This method serves as the inline validation for password.
-	 *
-	 * @param string $attribute the attribute currently being validated
-	 * @param array $params the additional name-value pairs given in the rule
-	 */
+
+
 	public function validatePassword($attribute, $params)
 	{
 		if (!$this->hasErrors()) {

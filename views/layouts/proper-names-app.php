@@ -79,7 +79,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 						echo Nav::widget([
 							'options' => ['class' => 'login-auth__btn navbar-nav'],
 									'items' =>[
-							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['#modal-window']] 
+							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['/site/login']] 
+							// Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['#modal-window']] 
 							: //['label' => Yii::$app->user->identity->login, 'url' => '/site/logout']
 							'<a class="">'
 							. Html::beginForm(['/site/logout'])
