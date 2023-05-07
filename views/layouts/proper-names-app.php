@@ -46,7 +46,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 									['label' => 'О нас', 'url' => ['site/about']],
 									['label' => 'Список имен собственных', 'url' => ['site/list-proper-names']],
 									['label' => 'Расширенный поиск', 'url' => ['site/extended-search']],
-									// Yii::$app->user->isGuest? [] :		
+									Yii::$app->user->isGuest? [] :		
 									['label' => 'Добавить новую информацию', 'url' => ['site/add-new-proper-name']],
 									],
 									'itemOptions'=>['class'=>'burger-menu__link']
@@ -64,7 +64,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 									['label' => 'О нас', 'url' => ['site/about']],
 									['label' => 'Список имен собственных', 'url' => ['site/list-proper-names']],
 									['label' => 'Расширенный поиск', 'url' => ['site/extended-search']],
-									// Yii::$app->user->isGuest? [] :		
+									Yii::$app->user->isGuest? [] :		
 									['label' => 'Добавить новую информацию', 'url' => ['site/add-new-proper-name']],
 									],
 									'itemOptions'=>['class'=>'menu__link']

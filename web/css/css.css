@@ -39,6 +39,10 @@ h1{
 	font-size: 15px;
 	color: white;
 }
+
+.btn:hover{
+	background-color: #110f85a3;
+}
 .wrapper {
 	min-height: 100%;
 	display: flex;
@@ -377,6 +381,11 @@ h1{
 	height: 272px;
 }
 .file-selector-input {
-	width: 0.1px;
-	height: 0.1px;
+	width: 154px;
+	display: flex;
+	padding-left: 20px;
+}
+
+.file-selector-input::file-selector-button { 
+   display: none; 
 }

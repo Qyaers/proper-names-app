@@ -58,9 +58,7 @@ class SiteController extends Controller
 		];
 	}
 
-	public function actionAddNewProperName(){
-		return $this->render('add-new-proper-name');
-	}
+
 
 
 	public function actionExtendedSearch(){
@@ -128,7 +126,7 @@ class SiteController extends Controller
 			// $user->login = $model->login;
 			// $user->email = $model->email;
 			// $user->password = $model->password;
-			// $user = new User();			
+			// $user->save();		
 			$login = $model->login;
 			$email = $model->email;
 			$password = $model->password;
@@ -145,6 +143,10 @@ class SiteController extends Controller
 		return $this->render('signup', [
 			'model' => $model,
 		]);
+	}
+
+	public function actionAddNewProperName(){
+		return $this->render('add-new-proper-name');
 	}
 
 	/**
