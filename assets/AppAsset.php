@@ -27,7 +27,7 @@ class AppAsset extends AssetBundle
 	'js/js.js',
 	'js/fileParser.js',
 	'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-	'modal-widow.js',
+
 	];
 	public $depends = [
 		'yii\web\YiiAsset',

@@ -15,6 +15,14 @@ $this->params['breadcrumbs'][] = $this->title;
 				</div>
 				<input type="file" name="" class="btn file-selector-input " title=" " id="" accept=".txt, .xlsx, .csv">
 				<ul class="output"></ul>
-				<button class="btn"type="submit">Добавить из файла</button>
+				<button class="add-from-file__btn btn"type="submit">Добавить из файла</button>
+				<div class="">
+				<p> 123 <?php if($data){$data;}
+				else{
+					?> Туфта <?php
+				}
+				?></p>
+
+				</div>
 	</p>
 </div>

@@ -12,9 +12,12 @@ use yii\bootstrap5\ActiveForm;
 use yii\widgets\Menu;
 use yii\bootstrap\Modal;
 
+
+
 AppAsset::register($this);
 
-$this->registerCsrfMetaTags();
+$this->registerMetaTag(['name' => 'csrf-param', 'content' => Yii::$app->request->csrfParam]);
+$this->registerMetaTag(['name' => 'csrf-token', 'content' => Yii::$app->request->getCsrfToken()]);
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);

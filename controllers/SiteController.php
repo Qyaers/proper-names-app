@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
+use app\models\AddInfoForm;
 use app\models\User;
 
 
@@ -42,6 +43,8 @@ class SiteController extends Controller
 		];
 	}
 
+
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -57,9 +60,6 @@ class SiteController extends Controller
 			],
 		];
 	}
-
-
-
 
 	public function actionExtendedSearch(){
 		return $this->render('extended-search');
@@ -130,13 +130,13 @@ class SiteController extends Controller
 			$login = $model->login;
 			$email = $model->email;
 			$password = $model->password;
-			
-			
-			Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
-				':login' => $login,
-				':email' => $email,
-				':password' => $password
-			])->execute();
+			// TODO add checker on user name
+			//if()
+				Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
+					':login' => $login,
+					':email' => $email,
+					':password' => $password
+				])->execute();
 			return $this->goHome();
 		} 	
 
@@ -146,7 +146,24 @@ class SiteController extends Controller
 	}
 
 	public function actionAddNewProperName(){
-		return $this->render('add-new-proper-name');
+
+		$data = '';
+		if(Yii::$app->request->post()){
+
+			$data = Yii::$app->getRequest()->getBodyParams();
+			echo "<pre>"; 
+			var_dump($data); 
+			echo "</pre>"; 
+			die;
+
+		}
+		if(Yii::$app->user->isGuest){
+			return $this->goHome();
+		}
+
+		return $this->render('add-new-proper-name', [
+			'data' => $data
+		]);
 	}
 
 	/**

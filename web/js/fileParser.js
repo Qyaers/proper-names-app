@@ -1,6 +1,9 @@
 const fileSelectorInput = document.querySelector('.file-selector-input');
 const fileSelectorArea = document.querySelector('.file-selector');
+const addInfoBtn = document.querySelector('.add-from-file__btn');
+const csrf_token = document.querySelector('meta[name="csrf-token"]').content;
 
+console.log(csrf_token);
 const output = document.querySelector('.output');
 
 let data;
@@ -15,13 +18,35 @@ fileSelectorArea.addEventListener('drop', async (event) => {
 	event.preventDefault();
 
 	data = await getDataFromUploadFile(event);
+	console.log(typeof (data));
 });
 
 fileSelectorInput.addEventListener('change', async (event) => {
 	event.stopPropagation();
 	event.preventDefault();
 	data = await getDataFromUploadFileInput();
+
+	console.log(typeof (data));
 });
+
+addInfoBtn.addEventListener('click', async () => {
+
+	var token = '{{csrf_token}}';
+	const response = await fetch('?r=site/AddNewProperName', {
+		// Метод, если не указывать, будет использоваться GET
+		method: 'POST',
+		// Заголовок запроса
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': csrf_token
+		},
+		// Данные
+		body: JSON.stringify(data)
+	});
+	// return response.json();
+
+});
+
 
 function getDataFromUploadFileInput() {
 	return new Promise(resovle => {
@@ -164,14 +189,3 @@ function getDataFromUploadFile(event) {
 };
 
 // TODO request add files into DB function must send data from file to server with info of data in file
-function dataSend(data) {
-
-	if (data) {
-		console.log(data);
-	}
-	else {
-		console.log("data is null");
-	}
-}
-
-dataSend();
