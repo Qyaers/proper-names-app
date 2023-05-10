@@ -3,7 +3,6 @@ const fileSelectorArea = document.querySelector('.file-selector');
 const addInfoBtn = document.querySelector('.add-from-file__btn');
 const csrf_token = document.querySelector('meta[name="csrf-token"]').content;
 
-console.log(csrf_token);
 const output = document.querySelector('.output');
 
 let data;
@@ -16,6 +15,7 @@ fileSelectorArea.addEventListener('dragover', (event) => {
 fileSelectorArea.addEventListener('drop', async (event) => {
 	event.stopPropagation();
 	event.preventDefault();
+	data = '';
 
 	data = await getDataFromUploadFile(event);
 	console.log(typeof (data));
@@ -24,29 +24,36 @@ fileSelectorArea.addEventListener('drop', async (event) => {
 fileSelectorInput.addEventListener('change', async (event) => {
 	event.stopPropagation();
 	event.preventDefault();
+	data = '';
 	data = await getDataFromUploadFileInput();
 
 	console.log(typeof (data));
 });
 
 addInfoBtn.addEventListener('click', async () => {
+	if (data) {
+		const response = await fetch('?r=site/AddNewProperName', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			// Данные
+			body: JSON.stringify(data)
+		});
+		let output = await response.json()
+		if (output.code == 200) {
+			console.log(output);
+			alert("Данные успешно добавлены!\n" + JSON.stringify(output.message));
+		}
+		else {
+			alert("Произошла ошибка");
+		}
 
-	var token = '{{csrf_token}}';
-	const response = await fetch('?r=site/AddNewProperName', {
-		// Метод, если не указывать, будет использоваться GET
-		method: 'POST',
-		// Заголовок запроса
-		headers: {
-			'Content-Type': 'application/json',
-			'X-CSRFToken': csrf_token
-		},
-		// Данные
-		body: JSON.stringify(data)
-	});
-	// return response.json();
-
+	}
+	else {
+		alert("Заполните данные.");
+	}
 });
-
 
 function getDataFromUploadFileInput() {
 	return new Promise(resovle => {

@@ -46,11 +46,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 							echo Menu::widget([
 								'options' => ['class' => ''],
 								'items' => [
-									['label' => 'О нас', 'url' => ['site/about']],
-									['label' => 'Список имен собственных', 'url' => ['site/list-proper-names']],
-									['label' => 'Расширенный поиск', 'url' => ['site/extended-search']],
+									['label' => 'О нас', 'url' => ['about']],
+									['label' => 'Список имен собственных', 'url' => ['list-proper-names']],
+									['label' => 'Расширенный поиск', 'url' => ['extended-search']],
 									Yii::$app->user->isGuest? [] :		
-									['label' => 'Добавить новую информацию', 'url' => ['site/add-new-proper-name']],
+									['label' => 'Добавить новую информацию', 'url' => ['add-new-proper-name']],
 									],
 									'itemOptions'=>['class'=>'burger-menu__link']
 								]);
@@ -64,11 +64,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 							echo Menu::widget([
 								'options' => ['class' => 'navbar-nav'],
 								'items' => [
-									['label' => 'О нас', 'url' => ['site/about']],
-									['label' => 'Список имен собственных', 'url' => ['site/list-proper-names']],
-									['label' => 'Расширенный поиск', 'url' => ['site/extended-search']],
+									['label' => 'О нас', 'url' => ['about']],
+									['label' => 'Список имен собственных', 'url' => ['list-proper-names']],
+									['label' => 'Расширенный поиск', 'url' => ['extended-search']],
 									Yii::$app->user->isGuest? [] :		
-									['label' => 'Добавить новую информацию', 'url' => ['site/add-new-proper-name']],
+									['label' => 'Добавить новую информацию', 'url' => ['add-new-proper-name']],
 									],
 									'itemOptions'=>['class'=>'menu__link']
 								]);
@@ -82,11 +82,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 						echo Nav::widget([
 							'options' => ['class' => 'login-auth__btn navbar-nav'],
 									'items' =>[
-							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['/site/login']] 
+							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['login']] 
 							// Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['#modal-window']] 
 							: //['label' => Yii::$app->user->identity->login, 'url' => '/site/logout']
 							'<a class="">'
-							. Html::beginForm(['/site/logout'])
+							. Html::beginForm(['logout'])
 							. Html::submitButton(
 								Yii::$app->user->identity->login .'(Logout)',
 								['class' => 'nav-link btn btn-link logout ']
@@ -99,7 +99,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 			</div>
 			<div class="sub-header">
 			<div class="sub-header__image">
-				<a href="index"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
+				<a href="/"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
 			</div>
 			<div class="sub-header__title">
 				<h1>

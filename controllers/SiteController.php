@@ -17,6 +17,7 @@ use app\models\User;
 
 class SiteController extends Controller
 {
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -147,15 +148,19 @@ class SiteController extends Controller
 
 	public function actionAddNewProperName(){
 
-		$data = '';
+		$data = Yii::$app->request->post();
+
 		if(Yii::$app->request->post()){
 
 			$data = Yii::$app->getRequest()->getBodyParams();
-			echo "<pre>"; 
-			var_dump($data); 
-			echo "</pre>"; 
-			die;
-
+			return \Yii::createObject([
+				'class' => 'yii\web\Response',
+				'format' => \yii\web\Response::FORMAT_JSON,
+				'data' => [
+					'message' => $data,
+					'code' => 200,
+				],
+			]);
 		}
 		if(Yii::$app->user->isGuest){
 			return $this->goHome();
