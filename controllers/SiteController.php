@@ -120,30 +120,49 @@ class SiteController extends Controller
 		}
 
 		$model = new SignupForm();
-
+			
 		if ($model->load(Yii::$app->request->post())) {
+				if ($user = $model->signup()) {
+						if (Yii::$app->getUser()->login($user)) {
+							$modelLogin = new LoginForm();
+							$modelLogin->login = $model->login;
+							$modelLogin->password = $model->password;
+							if ($modelLogin->login()) {
+								return $this->goHome(); 
+							}		
+						}
+				}
+			}
+			return $this->render('signup', [
+				'model' => $model,
+			]);
 
-			// $user = new User();			
-			// $user->login = $model->login;
-			// $user->email = $model->email;
-			// $user->password = $model->password;
-			// $user->save();		
-			$login = $model->login;
-			$email = $model->email;
-			$password = $model->password;
-			// TODO add checker on user name
-			//if()
-				Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
-					':login' => $login,
-					':email' => $email,
-					':password' => $password
-				])->execute();
-			return $this->goHome();
-		} 	
 
-		return $this->render('signup', [
-			'model' => $model,
-		]);
+		// $model = new SignupForm();
+
+		// if ($model->load(Yii::$app->request->post())) {
+
+		// 	// $user = new User();			
+		// 	// $user->login = $model->login;
+		// 	// $user->email = $model->email;
+		// 	// $user->password = $model->password;
+		// 	// $user->save();		
+		// 	$login = $model->login;
+		// 	$email = $model->email;
+		// 	$password = $model->password;
+		// 	// TODO add checker on user name
+		// 	//if()
+		// 		Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
+		// 			':login' => $login,
+		// 			':email' => $email,
+		// 			':password' => $password
+		// 		])->execute();
+		// 	return $this->goHome();
+		// } 	
+
+		// return $this->render('signup', [
+		// 	'model' => $model,
+		// ]);
 	}
 
 	public function actionAddNewProperName(){

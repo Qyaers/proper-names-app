@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<code><?= __FILE__ ?></code>
 				<div class="file-selector">
 				</div>
-				<input type="file" name="" class="btn file-selector-input " title=" " id="" accept=".txt, .xlsx, .csv">
+				<input type="file" name="" class="btn file-selector-input " title=" " id="" accept=".txt">
 				<ul class="output"></ul>
 				<button class="add-from-file__btn btn"type="submit">Добавить из файла</button>
 				<div class="">

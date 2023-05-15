@@ -21,7 +21,6 @@ class AppAsset extends AssetBundle
 	public $baseUrl = '@web';
 	public $css = [
 		'css/css.css',
-		'css/modalWindow.css'
 	];
 	public $js = [
 	'js/js.js',

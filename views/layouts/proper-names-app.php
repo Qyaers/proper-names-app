@@ -12,8 +12,6 @@ use yii\bootstrap5\ActiveForm;
 use yii\widgets\Menu;
 use yii\bootstrap\Modal;
 
-
-
 AppAsset::register($this);
 
 $this->registerMetaTag(['name' => 'csrf-param', 'content' => Yii::$app->request->csrfParam]);
@@ -36,12 +34,19 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <div class="wrapper">
 	<header id="header" class="header">
 		<div class="header__menu">
+
 			<div class="menu">
+			<div class="header__image">
+				<a href="/"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
+			</div>
 				<div class="burger-menu">
 					<a href="" class="burger-menu__btn">
 						<span class="burger-menu__lines"></span>
 					</a>
 					<nav class="burger-menu__nav">
+					<div class="header__image">
+				<a href="/"><img class="img-main-icon-burger" src="../logoIcon.png" alt=""></a>
+			</div>
 						<?php
 							echo Menu::widget([
 								'options' => ['class' => ''],
@@ -75,7 +80,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 						?>
 					</nav>
 				</div>
+
 			</div>
+			
 			<div class="header__auths">
 				<div class="login__auth">
 					<?php
@@ -83,37 +90,28 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 							'options' => ['class' => 'login-auth__btn navbar-nav'],
 									'items' =>[
 							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['login']] 
-							// Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['#modal-window']] 
-							: //['label' => Yii::$app->user->identity->login, 'url' => '/site/logout']
+							:
 							'<a class="">'
 							. Html::beginForm(['logout'])
 							. Html::submitButton(
 								Yii::$app->user->identity->login .'(Logout)',
-								['class' => 'nav-link btn btn-link logout ']
+								['class' => 'nav-link btn-link logout ']
 							)
 							. Html::endForm()
 							.'</a>'
 						]])?>
 				</div>
 			</div>
-			</div>
-			<div class="sub-header">
-			<div class="sub-header__image">
-				<a href="/"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
-			</div>
-			<div class="sub-header__title">
-				<h1>
-					Словарь имен собственных русского языка
-				</h1>
-			</div>
-			<div class="search-field">
+		</div>
+		<div class="sub-header">
+		<div class="search-field">
 				<div class="search-field-__input">
 					<input class="search-field__input" type="text" maxlength="44">
 				</div>
 				<div class="search-field__btn">
 					<image src="../searchButtonIcon.png" class="btn-search"></image>
 				</div>
-			</div>
+		</div>
 		</div>
 	</header>
 
@@ -142,75 +140,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 		</div>
 	</footer>
 </div>
-<div id="modal-window" class="modal-window">
-	<div class="modal-window__body">
-		<div class="modal-window__content">
-			<div class="modal-window__title">
-				<div class="modal-window__title-name">Логин</div>
-				<a class="modal-window__close" href="#">X</a>		
-			</div>
-			<div class="modal-window__form">
-				<div class="login-field">
-					<p class="field-title">Логин</p>
-					<input class="field__input" type="text" name="" id="">
-				</div>
-				<div class="password-field">
-					<p class="field-title">Пароль</p>
-					<input class="field__input" type="text" name="" id="">
-				</div>
-
-				<div class="sub-btns">
-					<div class="remember-user__btn">
-						<input class="remember-checkbox__btn" type="checkbox" name="" id=""></input><p style="font-size: 40px;">Запомнить меня</p>
-					</div>
-					<div class="forgot-password__btn">
-						<a href="#" style="font-size: 40px;">Забыли пароль?</a>
-					</div>
-				</div>
-			</div>
-			<div class="btns-auths">
-				<input class="login__btn" type="button" value="Войти">
-				<input class="reg__btn" type="button" value="Зарегестрироваться">
-			</div>
-		</div>
-	</div>
-</div>
-	
-	<!-- <div id="modal-window modal-window-registr" class="modal-window">
-		<div class="modal-window__body">
-			<div class="modal-window__content">
-				<div class="modal-window__title">
-					<div class="modal-window__title-name">Логин</div>
-					<a class="modal-window__close" href="#">X</a>		
-				</div>
-				<div class="modal-window__form">
-					<div class="login-field">
-						<p class="field-title">Логин</p>
-						<input class="field__input" type="text" name="" id="">
-					</div>
-					<div class="password-field">
-						<p class="field-title">Пароль</p>
-						<input class="field__input" type="text" name="" id="">
-					</div>
-					<div class="email">
-						<p class="field-title">Почта</p>
-						<input class="field__input" type="text" name="" id="">
-					</div>
-					<div class="sub-btns">
-						<div class="remember-user__btn">
-							<input class="remember-checkbox__btn" type="checkbox" name="" id=""></input><p style="font-size: 40px;">Запомнить меня</p>
-						</div>
-						<div class="forgot-password__btn">
-							<a href="#" style="font-size: 40px;">Забыли пароль?</a>
-						</div>
-					</div>
-				</div>
-				<div class="btns-auths">
-					<input class="login__btn" type="button" value="Войти">
-					<input class="reg__btn" type="button" value="Зарегестрироваться">
-				</div>
-			</div>
-		</div> -->
 <?php $this->endBody() ?>
 </body>
 </html>
