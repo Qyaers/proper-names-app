@@ -12,6 +12,8 @@ use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
 use app\models\AddInfoForm;
+use app\models\CategoryForm;
+use app\models\Category;
 use app\models\User;
 
 
@@ -44,9 +46,7 @@ class SiteController extends Controller
 		];
 	}
 
-
-
-	/**
+		/**
 	 * {@inheritdoc}
 	 */
 	public function actions()
@@ -122,95 +122,92 @@ class SiteController extends Controller
 		$model = new SignupForm();
 			
 		if ($model->load(Yii::$app->request->post())) {
-				if ($user = $model->signup()) {
-						if (Yii::$app->getUser()->login($user)) {
-							$modelLogin = new LoginForm();
-							$modelLogin->login = $model->login;
-							$modelLogin->password = $model->password;
-							if ($modelLogin->login()) {
-								return $this->goHome(); 
-							}		
-						}
-				}
+			if ($user = $model->signup()) {
+					if (Yii::$app->getUser()->login($user)) {
+						$modelLogin = new LoginForm();
+						$modelLogin->login = $model->login;
+						$modelLogin->password = $model->password;
+						if ($modelLogin->login()) {
+							return $this->goHome(); 
+						}		
+					}
 			}
-			return $this->render('signup', [
-				'model' => $model,
-			]);
+		}
 
-
-		// $model = new SignupForm();
-
-		// if ($model->load(Yii::$app->request->post())) {
-
-		// 	// $user = new User();			
-		// 	// $user->login = $model->login;
-		// 	// $user->email = $model->email;
-		// 	// $user->password = $model->password;
-		// 	// $user->save();		
-		// 	$login = $model->login;
-		// 	$email = $model->email;
-		// 	$password = $model->password;
-		// 	// TODO add checker on user name
-		// 	//if()
-		// 		Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
-		// 			':login' => $login,
-		// 			':email' => $email,
-		// 			':password' => $password
-		// 		])->execute();
-		// 	return $this->goHome();
-		// } 	
-
-		// return $this->render('signup', [
-		// 	'model' => $model,
-		// ]);
+		return $this->render('signup', [
+			'model' => $model,
+		]);
 	}
 
 	public function actionAddNewProperName(){
-
-		$data = Yii::$app->request->post();
+		//TODO Отредактировать отправку ошибок на клиент(сам код ошибки работает для категорий) (в JS приеме прописать, что есть дубликаты и вывести их)
+		$model = new CategoryForm();
 
 		if(Yii::$app->request->post()){
-
+		//add from file
 			$data = Yii::$app->getRequest()->getBodyParams();
-			return \Yii::createObject([
-				'class' => 'yii\web\Response',
-				'format' => \yii\web\Response::FORMAT_JSON,
-				'data' => [
-					'message' => $data,
-					'code' => 200,
-				],
-			]);
+			if(count($data) > 2){
+				$dublicates=[];
+				foreach ($data as $value) {
+					$model->name = $value['name'];
+					if(!$model->getNameCategory()){
+						Yii::$app->db->createCommand('INSERT INTO `Category` (`id`,`name`,`ancestor`) VALUES (:id,:name,:ancestor)', [
+							':id' => $value['id'],
+							':name' => $value['name'],
+							':ancestor' => $value['ancestor']
+						])->execute();
+					}else if($model->getNameCategory()){
+						array_push($dublicates,$value['name']);
+					}
+				}
+				if(!empty($dublicates)){
+					return \Yii::createObject([
+						'class' => 'yii\web\Response',
+						'format' => \yii\web\Response::FORMAT_JSON,
+						'data' => [
+							'message' => $dublicates,
+							'code' => 200,
+							'error' => 'dublicates'
+						],
+					]);
+				}else{
+					return \Yii::createObject([
+						'class' => 'yii\web\Response',
+						'format' => \yii\web\Response::FORMAT_JSON,
+						'data' => [
+							'message' => "Вся загруженная информация занесена!",
+							'code' => 200,
+							'error' => null
+						],
+					]);
+				}
+			}
+			else if($model->load(Yii::$app->request->post())){
+				$dublicates = null;
+				if(!$model->getNameCategory()){
+					Yii::$app->db->createCommand('INSERT INTO `Category` (`name`,`ancestor`) VALUES (:name,:ancestor)', [
+						':name' => $model->name,
+						':ancestor' => $model->ancestor
+					])->execute();
+				}else if($model->getNameCategory()){
+				}
+				return $this->render('add-new-proper-name', [
+					'model' => $model,
+				]);
+			}
 		}
+		
 		if(Yii::$app->user->isGuest){
 			return $this->goHome();
 		}
 
 		return $this->render('add-new-proper-name', [
-			'data' => $data
-		]);
-	}
-
-	/**
-	 * Displays contact page.
-	 *
-	 * @return Response|string
-	 */
-	public function actionContact()
-	{
-		$model = new ContactForm();
-		if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-			Yii::$app->session->setFlash('contactFormSubmitted');
-
-			return $this->refresh();
-		}
-		return $this->render('contact', [
 			'model' => $model,
 		]);
 	}
 
-
 	public function actionAbout()
 	{
-	return $this->render('about');
+		return $this->render('about');
 	}
 }

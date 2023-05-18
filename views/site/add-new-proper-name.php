@@ -3,26 +3,31 @@
 /** @var yii\web\View $this */
 
 use yii\helpers\Html;
+use yii\bootstrap5\ActiveForm;
 
 $this->title = 'Добавить новую информацию';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-add-new-proper-name">
 	<h1><?= Html::encode($this->title) ?></h1>
-	<p>
-	<code><?= __FILE__ ?></code>
-				<div class="file-selector">
-				</div>
-				<input type="file" name="" class="btn file-selector-input " title=" " id="" accept=".txt">
-				<ul class="output"></ul>
-				<button class="add-from-file__btn btn"type="submit">Добавить из файла</button>
+		<div class="d-inline-flex">
+			<div class="">
+					<div class="file-selector">
+					</div>
+					<input type="file" name="" class="btn file-selector-input " title=" " id="" accept=".txt">
+					<ul class="output"></ul>
+					<button class="add-from-file__btn btn"type="submit">Добавить из файла</button>
+			</div>
+			<div class="row ms-5">
 				<div class="">
-				<p> 123 <?php if($data){$data;}
-				else{
-					?> Туфта <?php
-				}
-				?></p>
-
+					<?php $form = ActiveForm::begin(['id' => 'form-add']); ?>
+						<?= $form->field($model, 'name')->textInput(['autofocus' => true])->label('Наименование') ?>
+						<?= $form->field($model, 'ancestor')->textInput(['autofocus' => true])->label('Предок') ?>
+						<div class="form-group">
+							<?= Html::submitButton('Добавить из формы', ['class' => 'btn btn-primary', 'name' => 'add-button']) ?>
+						</div>
+					<?php ActiveForm::end(); ?>
 				</div>
-	</p>
+			</div>
+		</div>
 </div>
