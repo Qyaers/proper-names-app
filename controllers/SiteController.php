@@ -14,6 +14,8 @@ use app\models\ContactForm;
 use app\models\AddInfoForm;
 use app\models\CategoryForm;
 use app\models\Category;
+use app\models\ProperName;
+use app\models\ProperNameForm;
 use app\models\User;
 
 
@@ -140,11 +142,85 @@ class SiteController extends Controller
 	}
 
 	public function actionAddNewProperName(){
-		//TODO Отредактировать отправку ошибок на клиент(сам код ошибки работает для категорий) (в JS приеме прописать, что есть дубликаты и вывести их)
+		$model = new ProperNameForm();
+		//TODO Доделать запрос на получение id категории по имени
+		if(Yii::$app->request->post()){
+		
+			$data = Yii::$app->getRequest()->getBodyParams();
+			if(count($data) > 2){
+				$dublicates=[];
+				foreach ($data as $value) {
+					$model->name = $value['name'];
+					if(!$model->getProperName()){
+						Yii::$app->db->createCommand('INSERT INTO `PropersNames` (`name`,`description`,`user_id`,`category_id`) VALUES (:name,:description,:user_id,:category_id)', [
+							':name' => $value['name'],
+							':description' => $value['description'],
+							':user_id' => Yii::$app->user->id,
+							':category_id' => $value['category_id']
+						])->execute();
+					}else if($model->getNameCategory()){
+						array_push($dublicates,$value['name']);
+					}
+				}
+				if(!empty($dublicates)){
+					return \Yii::createObject([
+						'class' => 'yii\web\Response',
+						'format' => \yii\web\Response::FORMAT_JSON,
+						'data' => [
+							'message' => $dublicates,
+							'code' => 200,
+							'error' => 'dublicates'
+						],
+					]);
+				}else{
+					return \Yii::createObject([
+						'class' => 'yii\web\Response',
+						'format' => \yii\web\Response::FORMAT_JSON,
+						'data' => [
+							'message' => "Вся загруженная информация занесена!",
+							'code' => 200,
+							'error' => null
+						],
+					]);
+				}
+			}
+			else if($model->load(Yii::$app->request->post())){
+				$dublicates = null;
+				if($model->validate()){
+					Yii::$app->db->createCommand('INSERT INTO `PropersNames` (`name`,`description`,`user_id`,`category_id`) VALUES (:name,:description,:user_id,:category_id)', [
+						':name' => $model->name,
+						':description' => $model->description,
+						':user_id' => Yii::$app->user->id,
+						':category_id' => $model->category_id
+					])->execute();
+					
+					return $this->render('add-new-proper-name', [
+						'model' => $model,
+						'message' => "Загрузка данных успешна"
+					]);
+				}
+				return $this->render('add-new-proper-name', [
+					'model' => $model,
+					'message' => ""
+				]);
+			}
+		}
+		
+		if(Yii::$app->user->isGuest){
+			return $this->goHome();
+		}
+		var_dump('');
+		return $this->render('add-new-proper-name', [
+			'model' => $model,
+			'message' => ""
+		]);
+	}
+
+	public function actionAddNewCategory(){
 		$model = new CategoryForm();
 
 		if(Yii::$app->request->post()){
-		//add from file
+		
 			$data = Yii::$app->getRequest()->getBodyParams();
 			if(count($data) > 2){
 				$dublicates=[];
@@ -184,15 +260,20 @@ class SiteController extends Controller
 			}
 			else if($model->load(Yii::$app->request->post())){
 				$dublicates = null;
-				if(!$model->getNameCategory()){
+				if($model->validate()){
 					Yii::$app->db->createCommand('INSERT INTO `Category` (`name`,`ancestor`) VALUES (:name,:ancestor)', [
 						':name' => $model->name,
 						':ancestor' => $model->ancestor
 					])->execute();
-				}else if($model->getNameCategory()){
+					
+					return $this->render('add-new-category', [
+						'model' => $model,
+						'message' => "Загрузка данных успешна"
+					]);
 				}
-				return $this->render('add-new-proper-name', [
+				return $this->render('add-new-category', [
 					'model' => $model,
+					'message' => ""
 				]);
 			}
 		}
@@ -201,10 +282,13 @@ class SiteController extends Controller
 			return $this->goHome();
 		}
 
-		return $this->render('add-new-proper-name', [
+		return $this->render('add-new-category', [
 			'model' => $model,
+			'message' => ""
 		]);
 	}
+
+
 
 	public function actionAbout()
 	{

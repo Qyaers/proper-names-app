@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\base\Model;
 
-$this->title = 'Добавить новое имя собственное';
+$this->title = 'Добавить новую категорию';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-add-new-proper-name">
@@ -15,19 +15,17 @@ $this->params['breadcrumbs'][] = $this->title;
 			<div class="">
 					<div class="file-selector">
 					</div>
-					<input type="file" name="" class="btn file-selector-input" title=" " id="" accept=".txt">
+					<input type="file" name="" class="btn file-selector-input " title=" " id="" accept=".txt">
 					<ul class="output"></ul>
 					<button class="add-from-file__btn btn"type="submit">Добавить из файла</button>
 			</div>
 			<div class="row ms-5">
 				<div class="">
-					<?php $form = ActiveForm::begin(['id' => 'form-proper-name']); ?>
+					<?php $form = ActiveForm::begin(['id' => 'form-category']); ?>
 						<?= $form->field($model, 'name')->textInput(['autofocus' => true])->label('Наименование') ?>
-						<?= $form->field($model, 'description')->textarea(['rows' => '6'])->label('Описание') ?>
-						<?= $form->field($model, 'сategory_id')->dropDownList(
+						<?= $form->field($model, 'ancestor')->dropDownList(
 							\yii\helpers\ArrayHelper::map(\app\models\Category::find()->all(), 'id', 'name')
-						)->label('Категория') ?>
-						<?= $form->field($model, 'user_id')->hiddenInput(['value'=> Yii::$app->user->id])->label(false); ?>
+						)->label('Предок') ?>
 						<div class="form-group">
 							<?= Html::submitButton('Добавить из формы', ['class' => 'btn btn-primary', 'name' => 'add-button']) ?>
 						</div>

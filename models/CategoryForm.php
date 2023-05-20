@@ -23,8 +23,9 @@ class CategoryForm extends Model
 	public function rules()
 	{
 		return [
-			[['name'],'required','message' => '	Поле "Наименование" должно быть заполнено.'],
-			[['name'], 'unique' , 'message' => 'This username has already been taken.'],
+			['name','required','message' => 'Поле "Наименование" должно быть заполнено.'],
+			['name', 'unique' ,'targetClass' => '\app\models\Category' , 'message' => 'Такая категория уже существует'],
+			['ancestor','number']
 		];
 	}
 

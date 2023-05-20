@@ -3,27 +3,12 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
 
-/**
- * CategoryForm is the model behind the login form.
- *
- * @property-read Category|null $name
- *
- */
-
-class Category extends ActiveRecord
+class Category extends ActiveRecord 
 {
 
 	public static function tableName() {
 		return 'Category';
-	}
-
-	public function rules () {
-		return [
-			[['name'],'required'],
-			[['name'],'string','max '=>15],
-		];
 	}
 
 	public function attributeLabels() {
@@ -83,6 +68,5 @@ class Category extends ActiveRecord
 
 		return $this->$ancestor;
 	}
-
 }
 ?>
