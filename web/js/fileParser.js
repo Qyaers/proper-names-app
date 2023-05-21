@@ -69,7 +69,7 @@ function getDataFromUploadFileInput() {
 						readerResult.shift();
 						const resultObj = readerResult.map(e => ({ id: e.split(";")[0], name: e.split(";")[1], ancestor: e.split(";")[2] }))
 						console.log(resultObj);
-
+						resultObj.file = true;
 						resovle(resultObj);
 					};
 				}
@@ -88,6 +88,7 @@ function getDataFromUploadFileInput() {
 						readerResult.shift();
 						const resultObj = readerResult.map(e => ({ name: e.split(";")[0], description: e.split(";")[1], category: e.split(";")[2] }))
 						console.log(resultObj);
+						resultObj.file = true;
 						resovle(resultObj);
 					};
 				}
@@ -110,6 +111,7 @@ function getDataFromUploadFile(event) {
 						let readerResult = reader.result.split(/\r\n|;\r\n/g);
 						readerResult.shift();
 						const resultObj = readerResult.map(e => ({ id: e.split(";")[0], name: e.split(";")[1], ancestor: e.split(";")[2] }))
+						resultObj.file = true;
 						resovle(resultObj);
 					};
 				}
@@ -127,6 +129,7 @@ function getDataFromUploadFile(event) {
 						let readerResult = reader.result.split(/\r\n|;\r\n/g);
 						readerResult.shift();
 						const resultObj = readerResult.map(e => ({ name: e.split(";")[0], description: e.split(";")[1], category: e.split(";")[2] }))
+						resultObj.file = true;
 						resovle(resultObj);
 					};
 				}

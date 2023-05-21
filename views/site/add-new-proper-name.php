@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<?php $form = ActiveForm::begin(['id' => 'form-proper-name']); ?>
 						<?= $form->field($model, 'name')->textInput(['autofocus' => true])->label('Наименование') ?>
 						<?= $form->field($model, 'description')->textarea(['rows' => '6'])->label('Описание') ?>
-						<?= $form->field($model, 'сategory_id')->dropDownList(
+						<?= $form->field($model, 'category_id')->dropDownList(
 							\yii\helpers\ArrayHelper::map(\app\models\Category::find()->all(), 'id', 'name')
 						)->label('Категория') ?>
 						<?= $form->field($model, 'user_id')->hiddenInput(['value'=> Yii::$app->user->id])->label(false); ?>
@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							<?= Html::submitButton('Добавить из формы', ['class' => 'btn btn-primary', 'name' => 'add-button']) ?>
 						</div>
 					<?php ActiveForm::end(); ?>
+					<?= Html::encode($message) ?>
 				</div>
 			</div>
 		</div>

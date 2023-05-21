@@ -53,6 +53,7 @@ class SiteController extends Controller
 	 */
 	public function actions()
 	{
+		var_dump(Yii::$app->user->id,"User id");
 		return [
 			'error' => [
 					'class' => 'yii\web\ErrorAction',
@@ -143,22 +144,25 @@ class SiteController extends Controller
 
 	public function actionAddNewProperName(){
 		$model = new ProperNameForm();
-		//TODO Доделать запрос на получение id категории по имени
 		if(Yii::$app->request->post()){
-		
 			$data = Yii::$app->getRequest()->getBodyParams();
-			if(count($data) > 2){
+			if(isset($data['file'])){
 				$dublicates=[];
 				foreach ($data as $value) {
 					$model->name = $value['name'];
-					if(!$model->getProperName()){
+					$model->description = $value['description'];
+					$id_category =  (Category::find()
+					->select('id')
+					->where(['name' => $value['category']])
+					->one())['id'];
+					if(!$model->getProperName() && !$model->getDescription()){
 						Yii::$app->db->createCommand('INSERT INTO `PropersNames` (`name`,`description`,`user_id`,`category_id`) VALUES (:name,:description,:user_id,:category_id)', [
 							':name' => $value['name'],
 							':description' => $value['description'],
 							':user_id' => Yii::$app->user->id,
-							':category_id' => $value['category_id']
+							':category_id' => $id_category 
 						])->execute();
-					}else if($model->getNameCategory()){
+					}else if($model->getProperName()){
 						array_push($dublicates,$value['name']);
 					}
 				}
@@ -167,7 +171,7 @@ class SiteController extends Controller
 						'class' => 'yii\web\Response',
 						'format' => \yii\web\Response::FORMAT_JSON,
 						'data' => [
-							'message' => $dublicates,
+							'message' => $data,
 							'code' => 200,
 							'error' => 'dublicates'
 						],
@@ -177,7 +181,10 @@ class SiteController extends Controller
 						'class' => 'yii\web\Response',
 						'format' => \yii\web\Response::FORMAT_JSON,
 						'data' => [
-							'message' => "Вся загруженная информация занесена!",
+							'message' => $model->category_id = Category::find()
+							->select('id')
+							->where(['name' => $data[0]['category']])
+							->one(),
 							'code' => 200,
 							'error' => null
 						],
@@ -191,28 +198,22 @@ class SiteController extends Controller
 						':name' => $model->name,
 						':description' => $model->description,
 						':user_id' => Yii::$app->user->id,
-						':category_id' => $model->category_id
+						':category_id' => (int)$model->category_id
 					])->execute();
-					
 					return $this->render('add-new-proper-name', [
 						'model' => $model,
 						'message' => "Загрузка данных успешна"
 					]);
 				}
-				return $this->render('add-new-proper-name', [
-					'model' => $model,
-					'message' => ""
-				]);
 			}
 		}
 		
 		if(Yii::$app->user->isGuest){
 			return $this->goHome();
 		}
-		var_dump('');
 		return $this->render('add-new-proper-name', [
 			'model' => $model,
-			'message' => ""
+			'message' => ''
 		]);
 	}
 
@@ -222,7 +223,7 @@ class SiteController extends Controller
 		if(Yii::$app->request->post()){
 		
 			$data = Yii::$app->getRequest()->getBodyParams();
-			if(count($data) > 2){
+			if(isset($data['file'])){
 				$dublicates=[];
 				foreach ($data as $value) {
 					$model->name = $value['name'];

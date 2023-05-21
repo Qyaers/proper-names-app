@@ -5,17 +5,11 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 
-/**
- * LoginForm is the model behind the login form.
- *
- * @property-read Category	|null $user
- *
- */
 class ProperNameForm extends Model
 {
 	public $id;
 	public $name;
-	public $сategory_id;
+	public $category_id;
 	public $description;
 	public $user_id;
 
@@ -25,11 +19,10 @@ class ProperNameForm extends Model
 	public function rules()
 	{
 		return [
-			['name','required','message' => 'Поле "Наименование" должно быть заполнено.'],
-			['name', 'unique' ,'targetClass' => '\app\models\ProperName' , 'message' => 'Такая категория уже существует'],
+			[['name','description','category_id'],'required','message' => 'Поля должны быть заполнены.'],
+			['name', 'unique' ,'targetClass' => '\app\models\ProperName' , 'message' => 'Такое имя собственное уже существует'],
 			['description','unique','targetClass' => '\app\models\ProperName' , 'message' => 'Такое описание уже существует'],
-			['user_id','number'],
-			['category_id','number']
+			['category_id','number'],
 		];
 	}
 
@@ -44,10 +37,11 @@ class ProperNameForm extends Model
 		return ProperName::findByDescription($this->description);
 	}
 
-	public function getCategoryId($name){
+	public function getCategoryId($category_name){
 		return Category::find()
-		->where(['name' => $name])
-		->one();;
+		->select('id')
+		->where(['name' => $category_name])
+		->one();
 	}
 
 }
