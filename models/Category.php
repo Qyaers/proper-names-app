@@ -19,7 +19,9 @@ class Category extends ActiveRecord
 		];
 	}
 
-	
+	// public static function find(){
+	// 	return static::find();
+	// }
 	/**
 	 * {@inheritdoc}
 	 */
@@ -39,6 +41,10 @@ class Category extends ActiveRecord
 		return static::findOne(['name' => $name]);
 	}
 
+
+	public static function findAllByCategoryName($name){
+		return static::findAll(['name' => $name]);
+	}
 		/**
 	 * Finds Ancestor by name
 	 *

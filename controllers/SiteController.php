@@ -8,6 +8,8 @@ use yii\db\ActiveRecord;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
+
 use app\models\LoginForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
@@ -53,7 +55,6 @@ class SiteController extends Controller
 	 */
 	public function actions()
 	{
-		var_dump(Yii::$app->user->id,"User id");
 		return [
 			'error' => [
 					'class' => 'yii\web\ErrorAction',
@@ -69,24 +70,16 @@ class SiteController extends Controller
 		return $this->render('extended-search');
 	}
 
-	public function actionListProperNames(){
-		return $this->render('list-proper-names');
-		}
-	/**
-	 * Displays homepage.
-	 *
-	 * @return string
-	 */
 	public function actionIndex()
 	{
 		return $this->render('index');
 	}
 
-	/**
-	 * Login action.
-	 *
-	 * @return Response|string
-	 */
+	public function actionAbout()
+	{
+		return $this->render('about');
+	}
+
 	public function actionLogin()
 	{
 		if (!Yii::$app->user->isGuest) {
@@ -104,11 +97,6 @@ class SiteController extends Controller
 		]);
 	}
 
-	/**
-	 * Logout action.
-	 *
-	 * @return Response
-	 */
 	public function actionLogout()
 	{
 		Yii::$app->user->logout();
@@ -142,7 +130,8 @@ class SiteController extends Controller
 		]);
 	}
 
-	public function actionAddNewProperName(){
+	public function actionAddNewProperName()
+	{
 		$model = new ProperNameForm();
 		if(Yii::$app->request->post()){
 			$data = Yii::$app->getRequest()->getBodyParams();
@@ -217,7 +206,8 @@ class SiteController extends Controller
 		]);
 	}
 
-	public function actionAddNewCategory(){
+	public function actionAddNewCategory()
+	{
 		$model = new CategoryForm();
 
 		if(Yii::$app->request->post()){
@@ -289,10 +279,42 @@ class SiteController extends Controller
 		]);
 	}
 
-
-
-	public function actionAbout()
+	public function actionListCategory()
 	{
-		return $this->render('about');
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => Category::find(),
+			'pagination' => [
+				'pageSize' => 49,
+			],
+		]);
+
+		return $this->render('category-list', [
+			'dataProvider' => $dataProvider
+		]);
 	}
+
+	public function actionCategoryInfo()
+	{
+		if($request = Yii::$app->request){
+			$id_category = $request->get('id');
+			$subCategory = new ActiveDataProvider([
+				'query' => Category::find()->where(['ancestor' => $id_category]),
+				'pagination' => [
+					'pageSize' => 15,
+				],
+			]);
+			var_dump($subCategory);
+
+			return $this->render('category-info', [
+				'subCategory' => $subCategory,
+				'title' => $request->get('name'),
+			]);
+		}
+		return $this->render('category-info', [
+			'subCategory' => 'error',
+		]);
+	}
+
 }
+

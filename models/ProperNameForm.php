@@ -26,7 +26,6 @@ class ProperNameForm extends Model
 		];
 	}
 
-	// TODO сделать для имен собственных они только уникальны
 	public function getProperName()
 	{
 		return ProperName::findByProperName($this->name);
