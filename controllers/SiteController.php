@@ -19,6 +19,7 @@ use app\models\Category;
 use app\models\ProperName;
 use app\models\ProperNameForm;
 use app\models\User;
+use app\models\ExtendedForm;
 
 
 class SiteController extends Controller
@@ -64,10 +65,6 @@ class SiteController extends Controller
 					'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
 			],
 		];
-	}
-
-	public function actionExtendedSearch(){
-		return $this->render('extended-search');
 	}
 
 	public function actionIndex()
@@ -140,7 +137,7 @@ class SiteController extends Controller
 				foreach ($data as $value) {
 					$model->name = $value['name'];
 					$model->description = $value['description'];
-					$id_category =  (Category::find()
+					$idCategory =  (Category::find()
 					->select('id')
 					->where(['name' => $value['category']])
 					->one())['id'];
@@ -149,7 +146,7 @@ class SiteController extends Controller
 							':name' => $value['name'],
 							':description' => $value['description'],
 							':user_id' => Yii::$app->user->id,
-							':category_id' => $id_category 
+							':category_id' => $idCategory 
 						])->execute();
 					}else if($model->getProperName()){
 						array_push($dublicates,$value['name']);
@@ -297,18 +294,25 @@ class SiteController extends Controller
 	public function actionCategoryInfo()
 	{
 		if($request = Yii::$app->request){
-			$id_category = $request->get('id');
+			$idCategory = $request->get('id');
 			$subCategory = new ActiveDataProvider([
-				'query' => Category::find()->where(['ancestor' => $id_category]),
+				'query' => Category::find()->where(['ancestor' => $idCategory]),
 				'pagination' => [
 					'pageSize' => 15,
 				],
 			]);
-			var_dump($subCategory);
+
+			$propNames = new ActiveDataProvider([
+				'query' => ProperName::find()->where(['category_id' => $idCategory]),
+				'pagination' => [
+					'pageSize' => 15,
+				],
+			]);
 
 			return $this->render('category-info', [
 				'subCategory' => $subCategory,
 				'title' => $request->get('name'),
+				'propNames' => $propNames,
 			]);
 		}
 		return $this->render('category-info', [
@@ -316,5 +320,96 @@ class SiteController extends Controller
 		]);
 	}
 
+	public function actionListProperNameInfo(){
+		if($request = Yii::$app->request){
+			$idCategory = $request->get('id');
+
+			$propNames = new ActiveDataProvider([
+				'query' => ProperName::find()->where(['category_id' => $idCategory]),
+				'pagination' => [
+					'pageSize' => 15,
+				],
+			]);
+
+			return $this->render('list-proper-name-info', [
+				'title' => $request->get('name'),
+				'propNames' => $propNames,
+			]);
+		}
+		return $this->render('list-proper-name-info', [
+		]);
+	}
+
+	public function actionProperName(){
+		if($request = Yii::$app->request){
+			$propName = $request->get('name');
+			$propNameInfo = ProperName::findOne(['name'=> $propName]);
+			return $this->render('proper-name', [
+				'title' => $request->get('name'),
+				'propNames' => $propNameInfo,
+			]);
+		}
+	}
+
+	public function actionSearchResult(){
+		if($request = Yii::$app->request){
+			$propName = $request->get('name');
+			$propNameInfo = ProperName::findOne(['name'=> $propName]);
+			return $this->render('proper-name', [
+				'title' => $request->get('name'),
+				'propNames' => $propNameInfo,
+			]);
+		}
+	}
+	public function actionExtendedSearch(){
+		$model= new ExtendedForm();
+
+		if($model->load(Yii::$app->request->post())){
+
+			if($model->properNameSearch){
+				$propNameInfo = ProperName::findOne(['name'=> $model->propName]);
+
+				return $this->render('proper-name', [
+					'title' => $model->propName,
+					'propNames' => $propNameInfo,
+				]);
+			}
+			else if($model->categorySearch){
+				$idCategory = $model->category;
+				$categoryName = Category::findOne(['id' => $idCategory]);
+
+				$subCategory = new ActiveDataProvider([
+					'query' => Category::find()->where(['ancestor' => $idCategory]),
+					'pagination' => [
+						'pageSize' => 15,
+					],
+				]);
+	
+				$propNames = new ActiveDataProvider([
+					'query' => ProperName::find()->where(['category_id' => $idCategory]),
+					'pagination' => [
+						'pageSize' => 15,
+					],
+				]);
+	
+				return $this->render('category-info', [
+					'subCategory' => $subCategory,
+					'title' => $categoryName->name,
+					'propNames' => $propNames,
+				]);
+			}
+			else if(is_null($model->categorySearch) && is_null($model->categorySearch)){
+				return $this->render('extended-search',[
+					'model' => $model,
+					'message' => "Выберете хотябы один вариант поиска"
+				]);
+			}
+		}
+
+		return $this->render('extended-search',[
+			'model' => $model,
+			'message' => ''
+		]);
+	}
 }
 

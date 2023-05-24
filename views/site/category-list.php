@@ -5,7 +5,7 @@ $this->title = 'Список категорий имен собственных'
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="site-about"></div>
+<div class="site-category-list"></div>
 	<h1><?= Html::encode($this->title) ?></h1>
 	<code><?= __FILE__ ?></code>
 

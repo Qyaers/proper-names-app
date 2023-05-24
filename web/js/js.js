@@ -1,4 +1,3 @@
-// TODO Доделать актив линк для бургера
 const setActiveLink = () => {
 	let links = document.querySelectorAll('.menu__link');
 	let activeLink = document.title;
@@ -38,11 +37,8 @@ const toggleMenu = () => {
 		document.body.style.overlow = 'visible';
 	}
 }
-const modalWindow = () => {
-
-}
-
-
 
 setActiveLink();
 burgerMenu();
+
+

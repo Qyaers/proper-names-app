@@ -33,20 +33,20 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php $this->beginBody() ?>
 <div class="wrapper">
 	<header id="header" class="header">
-		<div class="header__menu">
-
-			<div class="menu">
-			<div class="header__image">
-				<a href="/"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
-			</div>
-				<div class="burger-menu">
-					<a href="" class="burger-menu__btn">
-						<span class="burger-menu__lines"></span>
-					</a>
-					<nav class="burger-menu__nav">
+		<div>
+			<div class="header__menu">
+				<div class="menu">
 					<div class="header__image">
-				<a href="/"><img class="img-main-icon-burger" src="../logoIcon.png" alt=""></a>
-			</div>
+						<a href="/"><img class="img-main-icon" src="../logoIcon.png" alt=""></a>
+					</div>
+						<div class="burger-menu">
+							<a href="" class="burger-menu__btn">
+								<span class="burger-menu__lines"></span>
+							</a>
+							<nav class="burger-menu__nav">
+							<div class="header__image">
+						<a href="/"><img class="img-main-icon-burger" src="../logoIcon.png" alt=""></a>
+					</div>
 						<?php
 							echo Menu::widget([
 								'options' => ['class' => ''],
@@ -60,8 +60,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 									'itemOptions'=>['class'=>'burger-menu__link']
 								]);
 						?>
-					</nav>
-					<div class="burger-menu__overlay"></div>
+						</nav>
+							<div class="burger-menu__overlay"></div>
 				</div>
 				<div class="menu__navbar">
 					<nav class="menu__nav">
@@ -80,9 +80,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 						?>
 					</nav>
 				</div>
-
 			</div>
-			
+
 			<div class="header__auths">
 				<div class="login__auth">
 					<?php
@@ -104,14 +103,14 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 			</div>
 		</div>
 		<div class="sub-header">
-		<div class="search-field">
+			<form class="search-field" action="/site/search-result" method="GET">
 				<div class="search-field-__input">
-					<input class="search-field__input" type="text" maxlength="44">
+					<input name="name" class="search-field__input" type="text" maxlength="44">
 				</div>
 				<div class="search-field__btn">
-					<image src="../searchButtonIcon.png" class="btn-search"></image>
+					<button class="btn-search"><image src="../searchButtonIcon.png" class="btn-search"></image></button>
 				</div>
-		</div>
+			</form>
 		</div>
 	</header>
 

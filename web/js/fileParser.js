@@ -5,54 +5,56 @@ const addInfoBtn = document.querySelector('.add-from-file__btn');
 const output = document.querySelector('.output');
 
 let data;
+try {
+	fileSelectorArea.addEventListener('dragover', (event) => {
+		event.stopPropagation();
+		event.preventDefault();
+	});
 
-fileSelectorArea.addEventListener('dragover', (event) => {
-	event.stopPropagation();
-	event.preventDefault();
-});
+	fileSelectorArea.addEventListener('drop', async (event) => {
+		event.stopPropagation();
+		event.preventDefault();
+		data = '';
 
-fileSelectorArea.addEventListener('drop', async (event) => {
-	event.stopPropagation();
-	event.preventDefault();
-	data = '';
+		data = await getDataFromUploadFile(event);
+		console.log(typeof (data));
+	});
 
-	data = await getDataFromUploadFile(event);
-	console.log(typeof (data));
-});
+	fileSelectorInput.addEventListener('change', async (event) => {
+		event.stopPropagation();
+		event.preventDefault();
+		data = '';
+		data = await getDataFromUploadFileInput();
 
-fileSelectorInput.addEventListener('change', async (event) => {
-	event.stopPropagation();
-	event.preventDefault();
-	data = '';
-	data = await getDataFromUploadFileInput();
+		console.log(typeof (data));
+	});
 
-	console.log(typeof (data));
-});
+	addInfoBtn.addEventListener('click', async () => {
+		if (data) {
+			const response = await fetch('?r=site/AddNewProperName', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data)
+			});
+			let output = await response.json()
+			if (output.code == 200) {
+				console.log(output);
+				alert("Данные успешно добавлены!\n" + JSON.stringify(output.message));
+			}
+			else {
+				alert("Произошла ошибка");
+			}
 
-addInfoBtn.addEventListener('click', async () => {
-	if (data) {
-		const response = await fetch('?r=site/AddNewProperName', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data)
-		});
-		let output = await response.json()
-		if (output.code == 200) {
-			console.log(output);
-			alert("Данные успешно добавлены!\n" + JSON.stringify(output.message));
 		}
 		else {
-			alert("Произошла ошибка");
+			alert("Формы не заполнены, или не верный фармат файла.");
 		}
+	});
+} catch {
 
-	}
-	else {
-		alert("Формы не заполнены, или не верный фармат файла.");
-	}
-});
-
+}
 function getDataFromUploadFileInput() {
 	return new Promise(resovle => {
 
