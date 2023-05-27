@@ -15,11 +15,13 @@ use app\models\SignupForm;
 use app\models\ContactForm;
 use app\models\AddInfoForm;
 use app\models\CategoryForm;
-use app\models\Category;
 use app\models\ProperName;
 use app\models\ProperNameForm;
-use app\models\User;
 use app\models\ExtendedForm;
+use app\models\DataDownloadForm;
+
+use app\models\User;
+use app\models\Category;
 
 
 class SiteController extends Controller
@@ -409,6 +411,30 @@ class SiteController extends Controller
 		return $this->render('extended-search',[
 			'model' => $model,
 			'message' => ''
+		]);
+	}
+	public function actionDataDownload(){
+		
+		$model = new DataDownloadForm();
+		if(Yii::$app->request->post()){
+			$data = Yii::$app->getRequest()->getBodyParams();
+			$model->category_id = $data;
+			$querry = $model->getProperNamesByCategoryId($model->category_id);
+
+
+			//TODO обработать возврат и записать в файл на загрузку $model->getProperNamesByCategoryId($model->category_id) получает список данных
+			return  \Yii::createObject([
+				'class' => 'yii\web\Response',
+				'format' => \yii\web\Response::FORMAT_JSON,
+				'data' => [
+					'message' => $querry,
+					'code' => 200,
+			]]);
+		}
+		
+		return $this->render('data-download',[
+			'model' => $model,
+			'message' => $model->getProperNamesByCategoryId($model->category_id)
 		]);
 	}
 }

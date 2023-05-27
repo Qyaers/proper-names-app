@@ -41,4 +41,40 @@ const toggleMenu = () => {
 setActiveLink();
 burgerMenu();
 
+// donwload
+try {
+	const formSelect = document.querySelector('.form-select');
+	const downloadFileBtn = document.querySelector('.download-file-btn');
 
+	downloadFileBtn.addEventListener('click', async () => {
+		let categoryid = formSelect.value;
+		await getDataByCategoryId(categoryid);
+	});
+
+	async function getDataByCategoryId(categoryid) {
+		if (categoryid) {
+			const response = await fetch('?r=site/AddNewProperName', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ 'category_id': categoryid })
+			});
+			let output = await response.json();
+			if (output.code == 200) {
+				let a = document.createElement("a");
+				let file = new Blob([JSON.stringify(output.message)], { type: 'application/json' });
+				a.href = URL.createObjectURL(file);
+				a.download = "proper-names.JSON";
+				a.click();
+				alert("Данные успешно добавлены!\n" + JSON.stringify(output.message));
+			}
+			else {
+				alert("Произошла ошибка");
+			}
+		}
+	}
+
+} catch {
+
+}

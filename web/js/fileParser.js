@@ -26,7 +26,6 @@ try {
 		data = '';
 		data = await getDataFromUploadFileInput();
 
-		console.log(typeof (data));
 	});
 
 	addInfoBtn.addEventListener('click', async () => {
