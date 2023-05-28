@@ -25,6 +25,7 @@ class AppAsset extends AssetBundle
 	public $js = [
 	'js/js.js',
 	'js/fileParser.js',
+	'js/dbWork.js',
 	// 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
 
 	];

@@ -5,12 +5,10 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 
-/**
- * Signup form
- */
-class SignupForm extends Model
+class PersonalAccountUserForm extends Model
 {
 
+	public $userId;
 	public $login;
 	public $email;
 	public $password;
@@ -28,21 +26,19 @@ class SignupForm extends Model
 	];
 	}
 
-	public function signup()
-	{
+	public function getProperNamesByUserId($userId){
+		return ProperName::find()->where(['user_id' => $userId])->all();
+	}
 
+	public function updateUserData(){
+		
 		if (!$this->validate()) {
 			return null;
 		}
-
-		$user = new User();
-		$user->login = $this->login;
-		$user->email = $this->email;
-		$user->password = $this->password;
-		return Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
-						':login' => $user->login,
-						':email' => $user->email,
-						':password' => $user->password
-					])->execute() ? $user : null;
+		$user = User::findOne($userId);
+		$user->login = $login;
+		$user->password = $password;
+		$user->email = $email;
+		return $user->save() ? $user : null;
 	}
 }

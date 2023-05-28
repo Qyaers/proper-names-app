@@ -19,6 +19,7 @@ use app\models\ProperName;
 use app\models\ProperNameForm;
 use app\models\ExtendedForm;
 use app\models\DataDownloadForm;
+use app\models\PersonalAccountUserForm;
 
 use app\models\User;
 use app\models\Category;
@@ -305,7 +306,7 @@ class SiteController extends Controller
 			]);
 
 			$propNames = new ActiveDataProvider([
-				'query' => ProperName::find()->where(['category_id' => $idCategory]),
+				'query' => ProperName::find()->where(['category_id' => $idCategory,'user_id' => Yii::$app->user->identity->id])->orWhere(['category_id' => $idCategory,'aproved' => true]),
 				'pagination' => [
 					'pageSize' => 15,
 				],
@@ -356,13 +357,22 @@ class SiteController extends Controller
 	public function actionSearchResult(){
 		if($request = Yii::$app->request){
 			$propName = $request->get('name');
-			$propNameInfo = ProperName::findOne(['name'=> $propName]);
-			return $this->render('proper-name', [
-				'title' => $request->get('name'),
-				'propNames' => $propNameInfo,
-			]);
+			$propNameInfo = ProperName::findOne(['name'=> $propName ,'aproved' => true]);
+			if($propNameInfo){
+				return $this->render('proper-name', [
+					'title' => $request->get('name'),
+					'propNames' => $propNameInfo,
+				]);
+			}
+			else{
+				return $this->render('proper-name', [
+					'title' => 'Произошла ошибка',
+					'propNames' => 'Данного имени собственного не существует',
+				]);
+			}
 		}
 	}
+	
 	public function actionExtendedSearch(){
 		$model= new ExtendedForm();
 
@@ -413,6 +423,7 @@ class SiteController extends Controller
 			'message' => ''
 		]);
 	}
+	
 	public function actionDataDownload(){
 		
 		$model = new DataDownloadForm();
@@ -421,8 +432,6 @@ class SiteController extends Controller
 			$model->category_id = $data;
 			$querry = $model->getProperNamesByCategoryId($model->category_id);
 
-
-			//TODO обработать возврат и записать в файл на загрузку $model->getProperNamesByCategoryId($model->category_id) получает список данных
 			return  \Yii::createObject([
 				'class' => 'yii\web\Response',
 				'format' => \yii\web\Response::FORMAT_JSON,
@@ -435,6 +444,24 @@ class SiteController extends Controller
 		return $this->render('data-download',[
 			'model' => $model,
 			'message' => $model->getProperNamesByCategoryId($model->category_id)
+		]);
+	}
+
+	//TODO Make own form for fields 
+	public function actionPersonalAccount(){
+
+		$model = new PersonalAccountUserForm();
+		$model->userId =Yii::$app->user->identity->id;
+		$properNames = $model->getProperNamesByUserId($model->userId);
+		
+		if($model->load(Yii::$app->request->post())){
+			$model->updateUserData();
+		}
+
+
+		return $this->render('personal-account',[
+			'model' => $model,
+			'properNames' => $properNames
 		]);
 	}
 }

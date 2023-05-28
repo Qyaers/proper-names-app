@@ -1,0 +1,78 @@
+<?php
+
+/** @var yii\web\View $this */
+
+use yii\bootstrap5\ActiveForm;
+use yii\bootstrap5\Html;
+use yii\bootstrap5\Nav;
+
+$this->title = 'Личный кабинет';
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="site-personal-account">
+	<h1><?= Html::encode($this->title) ?></h1>
+	<div>
+		<div class="personal-account-info">
+
+			<?php $form = ActiveForm::begin([
+				'id' => 'personal-account-form',
+				'layout' => 'horizontal',
+				'fieldConfig' => [
+					'template' => "{label}\n{input}\n{error}",
+					'labelOptions' => ['class' => 'col-lg-1 '],
+					'inputOptions' => ['class' => 'col-lg-3 '],
+					'errorOptions' => ['class' => 'col-lg-3 invalid-feedback'],
+				],
+			]); ?>
+
+				<?= $form->field($model, 'login')->textInput(['placeholder' => Yii::$app->user->identity->login, 'value'=>Yii::$app->user->identity->login,'autofocus' => true])->label('Логин') ?>
+
+				<?= $form->field($model, 'password')->passwordInput(['placeholder' => '*******', 'value'=>Yii::$app->user->identity->password,'autofocus' => true])->label('Пароль')  ?>
+
+				<?= $form->field($model, 'email')->textInput(['placeholder' => Yii::$app->user->identity->email, 'value'=>Yii::$app->user->identity->email,'autofocus' => true])->label('Email') ?>
+					<div class="auths-btns">
+						<?= Html::submitButton('Изменить', ['class' => 'btn', 'name' => 'login-button']) ?> 
+					</div>
+				</div>
+		</div>
+		//TODO Добавить возможность редактирования и удаления смотри ссылку на гх 
+		// https://github.com/Qyaers/term-app/blob/master/resources/views/admin/term.blade.php
+		// https://github.com/Qyaers/term-app/blob/master/resources/js/app.js#LL26C1-L26C1
+		<?php ActiveForm::end();
+		if(!empty($properNames)){
+			echo "<div class='user-uploads-info'>
+				<table data-table-body>
+					<tr data-headers>
+						<th scope='col' data-edit-col = 'name' data-edit-type='input'>Имя собственное</th>
+						<th scope='col' data-edit-col = 'description' data-edit-type='textarea'>Описание</th>
+						<th scope='col'>Статус заявки</th>
+					</tr>
+					<tr>
+						<td>";
+								foreach($properNames as $value){
+									echo "<tr id = ".$value['id'].">
+									<td>" .$value['name']. "</td><td>"
+									.$value['description']."</td><td>".
+									($value['aproved']?"Одобрено":"Не одобрено").
+									"</td><td><input type='button'data-btn='edit' data-btn='edit' value='✎'></td></tr>";
+								}
+					echo	"</td>
+					</tr>
+				</table>
+			</div>";
+		}?>
+	</div>
+</div>
+<template id="addElement">
+	<tr>
+		<td></td>
+		<td><input name="nameTerm" type="text"></td>
+		<td>
+			<textarea name="discription" cols="30" rows="10"></textarea>
+		</td>
+		<td>
+				<input type="button" data-btn="add" value="✔">
+				<input type="button" data-btn="decline" value="✖">
+		</td>
+	</tr>
+</template>

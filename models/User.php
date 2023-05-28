@@ -68,6 +68,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 		return $this->id;
 	}
 
+	public function getRole()
+	{
+		return $this->role;
+	}
+
 	public function getUserLogin($login){
 
 		return $this->$login;

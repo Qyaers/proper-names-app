@@ -9,7 +9,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div class="proper-name">
 		<h1 class="proper-name__title"><?= Html::encode($this->title) ?></h1>
 		<p class="proper-name__discription">
-			<?= Html::encode($propNames->description)?>
+			<?= Html::encode(is_object($propNames)?$propNames->description:$propNames)?>
 		</p>
 	</div>
 </div>

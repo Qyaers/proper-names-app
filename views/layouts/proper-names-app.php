@@ -81,24 +81,26 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 					</nav>
 				</div>
 			</div>
-
 			<div class="header__auths">
 				<div class="login__auth">
 					<?php
 						echo Nav::widget([
 							'options' => ['class' => 'login-auth__btn navbar-nav'],
 									'items' =>[
-							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['login']] 
+							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['login'] ] 
 							:
-							'<a class="">'
-							. Html::beginForm(['logout'])
-							. Html::submitButton(
-								Yii::$app->user->identity->login .'(Logout)',
-								['class' => 'nav-link btn-link logout ']
-							)
-							. Html::endForm()
-							.'</a>'
-						]])?>
+							['label' => Yii::$app->user->identity->login,'options' => ['id' => 'down_history'], 
+								'items'=>[
+									['label' => 'Личный кабинет', 'url' => ['/site/personal-account'],'options' => ['id' => 'wn_history']],
+									'<a class="123" id = "wn_history">'
+									. Html::beginForm(['logout'])
+									. Html::submitButton('Выйти',['class' => 'dropdown-item'])
+									. Html::endForm()
+									.'</a>'
+								]
+							],
+						]])
+						?>
 				</div>
 			</div>
 		</div>
