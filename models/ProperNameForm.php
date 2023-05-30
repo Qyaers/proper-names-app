@@ -42,5 +42,4 @@ class ProperNameForm extends Model
 		->where(['name' => $category_name])
 		->one();
 	}
-
 }

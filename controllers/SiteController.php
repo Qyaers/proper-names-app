@@ -304,14 +304,21 @@ class SiteController extends Controller
 					'pageSize' => 15,
 				],
 			]);
-
-			$propNames = new ActiveDataProvider([
-				'query' => ProperName::find()->where(['category_id' => $idCategory,'user_id' => Yii::$app->user->identity->id])->orWhere(['category_id' => $idCategory,'aproved' => true]),
-				'pagination' => [
-					'pageSize' => 15,
-				],
-			]);
-
+			if(isset(Yii::$app->user->identity->id)){
+				$propNames = new ActiveDataProvider([
+					'query' => ProperName::find()->where(['category_id' => $idCategory])->andWhere(['aproved' => true])->orWhere(['user_id' => Yii::$app->user->identity->id]),
+					'pagination' => [
+						'pageSize' => 15,
+					],
+				]);
+			} else{
+				$propNames = new ActiveDataProvider([
+					'query' => ProperName::find()->where(['category_id' => $idCategory])->andWhere(['aproved' => true]),
+					'pagination' => [
+						'pageSize' => 15,
+					],
+				]);
+			}
 			return $this->render('category-info', [
 				'subCategory' => $subCategory,
 				'title' => $request->get('name'),
@@ -447,22 +454,56 @@ class SiteController extends Controller
 		]);
 	}
 
-	//TODO Make own form for fields 
 	public function actionPersonalAccount(){
 
 		$model = new PersonalAccountUserForm();
-		$model->userId =Yii::$app->user->identity->id;
+		$model->userId = Yii::$app->user->identity->id;
 		$properNames = $model->getProperNamesByUserId($model->userId);
 		
-		if($model->load(Yii::$app->request->post())){
-			$model->updateUserData();
+		if($request = Yii::$app->request->post()){
+			$data = $request;
+
+			//Edit data proper name
+
+			if(isset($data['type']) && $data['type'] == 'edit'){
+				$update = [
+					"id" => $data["id"],
+					"name" => $data["name"],
+					"description" => $data["description"],
+				];
+				$changeElem = $model->editUserRequest($data,$update);
+				if ($changeElem) {
+					$result = ProperName::findOne(['id'=>$data['id']]);
+					return  \Yii::createObject([
+						'class' => 'yii\web\Response',
+						'format' => \yii\web\Response::FORMAT_JSON,
+						'data' => $result,
+					]);
+				} else {
+					$result = ["error"=>"Ошибка изменения базы."];
+					return  \Yii::createObject([
+						'class' => 'yii\web\Response',
+						'format' => \yii\web\Response::FORMAT_JSON,
+						'data' => $result
+					]);
+				}
+			}
+			//Remove proper name 
+			if(isset($data['type']) && $data['type']=='remove'){
+				return  \Yii::createObject([
+					'class' => 'yii\web\Response',
+					'format' => \yii\web\Response::FORMAT_JSON,
+					'data' => $model->removeProperName($data['id'])
+				]);
+			}
+			// edit account data
+			else{
+				
+			}
 		}
-
-
 		return $this->render('personal-account',[
 			'model' => $model,
 			'properNames' => $properNames
 		]);
 	}
 }
-

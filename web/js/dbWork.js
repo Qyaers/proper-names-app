@@ -61,7 +61,6 @@ async function documentActions(e) {
 						if (child.querySelector('ul') && child.querySelector('ul').hasAttributes('data-filter')) {
 							filter = child.querySelector('ul').getAttribute('data-filter');
 							filter = JSON.parse(filter);
-							console.log(filter);
 						}
 						let listValue = {};
 						Array.from(list).map(elem => {
@@ -104,6 +103,9 @@ async function documentActions(e) {
 		let btnAbort = document.createElement("input");
 		btnSave.type = "button";
 		btnAbort.type = "button";
+		btnAbort.className = 'btn';
+		btnSave.className = 'btn';
+
 		btnSave.value = "✔";
 		btnAbort.value = "✖";
 		btnSave.setAttribute("data-btn", "save");
@@ -154,6 +156,7 @@ async function documentActions(e) {
 		curTd.innerHTML = "";
 		let btnEdit = document.createElement("input");
 		btnEdit.type = "button";
+		btnEdit.className = 'btn';
 		btnEdit.value = "✎";
 		btnEdit.setAttribute("data-btn", "edit");
 		curTd.append(btnEdit);
@@ -164,6 +167,7 @@ async function documentActions(e) {
 		const tr = curTd.parentElement;
 		const childs = tr.children;
 		const data = {};
+		data.type = 'edit'
 		Array.prototype.forEach.call(childs, function (el, i) {
 			let childsEl = el.children;
 			if (!childsEl.length) {
@@ -187,7 +191,7 @@ async function documentActions(e) {
 			}
 		});
 		if (Object.keys(data).length != 0) {
-			fetch('?r=site/AddNewProperName', {
+			fetch('?r=site/PersonalAccount', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json;charset=utf-8',
@@ -198,7 +202,7 @@ async function documentActions(e) {
 				.then(res => res.json())
 				.then(res => {
 					if (res.error) {
-						console.log("Error: " + res.error)
+						alert("Ошибка при обновлении данных, скорее всего такое имя собственное уже существует. ");
 					} else {
 						Array.prototype.forEach.call(childs, function (el, i) {
 							let childsEl = el.children;
@@ -246,6 +250,7 @@ async function documentActions(e) {
 						curTd.innerHTML = "";
 						let btnEdit = document.createElement("input");
 						btnEdit.type = "button";
+						btnEdit.className = 'btn';
 						btnEdit.value = "✎";
 						btnEdit.setAttribute("data-btn", "edit");
 						curTd.append(btnEdit);
@@ -257,108 +262,27 @@ async function documentActions(e) {
 	if (targetElement.closest('[data-btn="remove"]')) {
 		const table = document.querySelector("table");
 		let checkedElem = table.querySelectorAll("[data-checkbox]:checked");
-		let delElem = Array.from(checkedElem).map(el => el.value);
-		fetch(document.location.origin + document.location.pathname + "/delete", {
+		const dellArray = Array.from(checkedElem).map(el => el.value);
+		const dellObject = {
+			id: dellArray,
+			type: 'remove'
+		}
+		fetch('?r = site / PersonalAccount', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8',
 				'X-CSRF-Token': document.head.querySelector('meta[name="csrf-token"]').content,
 			},
-			body: JSON.stringify(delElem)
+			body: JSON.stringify(dellObject)
 		})
 			.then(res => res.json())
 			.then(res => {
 				if (res.error || res.status == "error") {
-					console.log("Error: " + res.message)
+					alert("При удалении произошла ошибка" + res.message);
 				} else {
 					location.reload();
 				}
 			});
-	}
-
-	if (targetElement.closest('[data-btn="newElem"]')) {
-
-		const table = document.querySelector("table");
-		if (!table.querySelector('[data-new-elem]')) {
-			const template = document.querySelector("#addElement");
-			let newTr = template.content.cloneNode(true);
-			newTr.querySelector("tr").setAttribute("data-new-elem", "");
-			table.querySelector("tbody").prepend(newTr);
-			let tr = table.querySelector("tbody tr");
-			let filter = tr.querySelector("[data-filter-target]");
-			if (filter) {
-				var evt = new Event("change", { "bubbles": true, "cancelable": false });
-				filter.dispatchEvent(evt);
-			}
-		}
-	}
-
-	if (targetElement.closest('[data-btn="decline"]')) {
-
-		let table = document.querySelector("table");
-		table.querySelector('[data-new-elem]').remove();
-	}
-
-	if (targetElement.closest('[data-btn="add"]')) {
-		const curTd = targetElement.parentElement;
-		const tr = curTd.parentElement;
-		const childs = tr.children;
-		const data = {};
-		Array.prototype.forEach.call(childs, function (el, i) {
-			let childsEl = el.children;
-			if (!childsEl.length) {
-				return;
-			}
-			let childInput = false;
-			for (let j = 0; j < childsEl.length; j++) {
-				if (childsEl[j].tagName == "INPUT" && childsEl[j].type == "text") {
-					data[childsEl[j].name] = childsEl[j].value;
-				}
-				if (childsEl[j].tagName == "SELECT") {
-					const selected = el.querySelectorAll('option:checked');
-					data[childsEl[j].name] = Array.from(selected).map(el => el.value);
-				}
-				if (childsEl[j].tagName == "INPUT" && childsEl[j].type == "checkbox") {
-					data.id = childsEl[j].value;
-				}
-				if (childsEl[j].tagName == "TEXTAREA") {
-					data[childsEl[j].name] = childsEl[j].value;
-				}
-			}
-		});
-		if (Object.keys(data).length != 0) {
-			fetch(document.location.origin + document.location.pathname + "/add", {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json;charset=utf-8',
-					'X-CSRF-Token': document.head.querySelector('meta[name="csrf-token"]').content,
-				},
-				body: JSON.stringify(data)
-			})
-				.then(res => res.json())
-				.then(res => {
-					if (res.error || res.status == "error") {
-						console.log("Error: " + res.error)
-					} else {
-						location.reload();
-					}
-				});
-		}
-	}
-
-	if (e.type == "click" && targetElement.closest('[data-btn="filterElem"]')) {
-		let searchElem = document.querySelector('.findElem');
-		if (searchElem.style.display == "none") {
-			searchElem.style.display = "";
-		} else {
-			searchElem.value = "";
-			// searchElem.dispatchEvent(new KeyboardEvent("keyup",{"key": "Backspace"}));
-			let table = document.querySelector('table');
-			for (let i = 1; i < table.rows.length; i++) {
-				table.rows[i].style.display = "";
-			}
-			searchElem.style.display = "none";
-		}
 	}
 
 	if (targetElement.closest('[data-select-all]')) {
@@ -378,120 +302,4 @@ async function documentActions(e) {
 		}, status);
 		allCheckbox.checked = status;
 	}
-
-	if (e.type == "click" && targetElement.closest('[data-btn="search"]')) {
-		let searchTr = targetElement.parentElement.parentElement;
-		let listFields = searchTr.querySelectorAll("[name]");
-		let strFilter = '';
-		if (listFields.length) {
-			let searchData = {};
-			let strFilter = 'searchField=';
-			Array.from(listFields).map(el => {
-				switch (el.tagName) {
-					case "INPUT":
-						switch (el.type) {
-							case "text":
-								if (el.value) {
-									strFilter += el.name + ',';
-									searchData[el.name] = el.value;
-								}
-								break;
-							case "checkbox":
-								if (el.value) {
-									strFilter += el.name + ',';
-									searchData[el.name] = el.checked;
-								}
-								break;
-						}
-						break;
-					case "SELECT":
-						if (el.multiple) {
-							console.log(el.value);
-						} else {
-							if (el.value) {
-								strFilter += el.name + ',';
-								searchData[el.name] = el.value;
-							}
-						}
-						break;
-				}
-			})
-			strFilter = strFilter.replace(/^,+|,+$/g, '')
-			for (let key in searchData) {
-				strFilter += "&" + key + "=" + searchData[key];
-			}
-		}
-
-		let url = location.pathname;
-		url += '?page=1' + (strFilter ? '&' + strFilter : '');
-
-		history.pushState({}, "title", url);
-
-		const response = await fetch(url, {
-			method: 'GET',
-		});
-
-		if (response.ok) { // если HTTP-статус в диапазоне 200-299
-			// получаем тело ответа (см. про этот метод ниже)
-			let data = await response;
-			data.text().then(function (html) {
-				var parser = new DOMParser();
-				var doc = parser.parseFromString(html, 'text/html');
-				let new_tbody = doc.querySelector('[data-table-body]');
-				document.querySelector('table tbody').innerHTML = new_tbody.innerHTML;
-				let new_pagenav = doc.querySelector('[data-pagination]');
-				document.querySelector('[data-pagination]').innerHTML = new_pagenav.innerHTML;
-			});
-			console.log(data);
-		} else {
-			alert("Ошибка HTTP: " + response.status);
-		}
-	}
-
-	if (e.type == "change" && targetElement.closest("[data-filter-target]")) {
-		let filterIds = JSON.parse(targetElement.querySelector("option:checked").getAttribute("data-filter-id"));
-		let targetName = targetElement.getAttribute("data-filter-target");
-		let target = document.querySelector(`select[name="${targetName}"]`)
-		let list = target.querySelectorAll("option");
-		let checked = false;
-		Array.from(list).map(opt => {
-			if (filterIds.includes(+opt.value)) {
-				if (!checked) {
-					opt.selected = true;
-					checked = true;
-				}
-				opt.style.display = "block";
-			} else {
-				opt.style.display = "none";
-			}
-		}, filterIds, checked);
-
-	}
 }
-
-
-document.addEventListener('DOMContentLoaded', function (e) {
-	let search = {};
-	location.search.replace('\?', '').split('&').map((v, i, a) => {
-		let prop = v.split('=');
-		search[prop[0]] = decodeURI(prop[1]);
-	}, search);
-
-	if (search.hasOwnProperty('searchField')) {
-		let filter = document.querySelector('[data-search-filter]');
-		filter.style.display = '';
-		let listField = filter.querySelectorAll('[name]');
-		Array.from(listField).map(field => {
-			if (search.hasOwnProperty(field.name)) {
-				switch (field.tagName) {
-					case "INPUT":
-						field.value = search[field.name];
-						break;
-					case "SELECT":
-						field.value = search[field.name];
-						break;
-				}
-			}
-		})
-	}
-})

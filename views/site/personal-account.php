@@ -38,41 +38,53 @@ $this->params['breadcrumbs'][] = $this->title;
 		//TODO Добавить возможность редактирования и удаления смотри ссылку на гх 
 		// https://github.com/Qyaers/term-app/blob/master/resources/views/admin/term.blade.php
 		// https://github.com/Qyaers/term-app/blob/master/resources/js/app.js#LL26C1-L26C1
+		<br>
+		<br>
+		<br>
+		<br>
 		<?php ActiveForm::end();
+		
 		if(!empty($properNames)){
 			echo "<div class='user-uploads-info'>
-				<table data-table-body>
-					<tr data-headers>
-						<th scope='col' data-edit-col = 'name' data-edit-type='input'>Имя собственное</th>
-						<th scope='col' data-edit-col = 'description' data-edit-type='textarea'>Описание</th>
-						<th scope='col'>Статус заявки</th>
-					</tr>
-					<tr>
-						<td>";
-								foreach($properNames as $value){
-									echo "<tr id = ".$value['id'].">
-									<td>" .$value['name']. "</td><td>"
-									.$value['description']."</td><td>".
-									($value['aproved']?"Одобрено":"Не одобрено").
-									"</td><td><input type='button'data-btn='edit' data-btn='edit' value='✎'></td></tr>";
-								}
-					echo	"</td>
-					</tr>
-				</table>
-			</div>";
+			<table class='table'>
+				<thead>
+				<tr data-headers >
+					<th scope='col'><input data-select-all type='checkbox'></th>
+					<th scope='col'>#</th>
+					<th scope='col' data-edit-col='name' data-edit-type='input'>Наименование</th>
+					<th scope='col' data-edit-col='description' data-edit-type='textarea'>Описание</th>
+					<th scope='col'>Изменить</th>
+				</tr>
+				</thead>
+				<tbody data-table-body>";
+				$i=1;
+				foreach($properNames as $value){
+					echo "<tr>
+							<td><input type='checkbox' data-checkbox value=".$value["id"]."></td>
+							<td>".$i++."</td>
+							<td>". $value['name']."</td>
+							<td>".$value['description']."</td>
+							<td><input class='btn' type='button' data-btn='edit' value='✎'></td>
+					</tr>";
+				}
+				echo "
+				</tbody>
+			</table>
+			</div>
+		<input class='btn' type='button' data-btn='remove' value='Удалить выбранные'>";
 		}?>
 	</div>
 </div>
 <template id="addElement">
 	<tr>
 		<td></td>
-		<td><input name="nameTerm" type="text"></td>
+		<td><input name="name" type="text"></td>
 		<td>
-			<textarea name="discription" cols="30" rows="10"></textarea>
+			<textarea name="description" cols="30" rows="10"></textarea>
 		</td>
 		<td>
-				<input type="button" data-btn="add" value="✔">
-				<input type="button" data-btn="decline" value="✖">
+				<input class='btn' type="button" data-btn="add" value="✔">
+				<input class='btn' type="button" data-btn="decline" value="✖">
 		</td>
 	</tr>
 </template>

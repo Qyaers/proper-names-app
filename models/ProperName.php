@@ -67,5 +67,7 @@ class ProperName extends ActiveRecord
 
 		return $this->$category_id;
 	}
+
+	
 }
 ?>
