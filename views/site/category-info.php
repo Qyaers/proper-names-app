@@ -70,6 +70,9 @@ $this->title = $title;
 					'firstPageLabel' => 'Первая', // ссылка на первую страницу
 					'lastPageLabel' => 'Последняя', // ссылка на последнюю странцу
 					'maxButtonCount' => 5, // количество отображаемых страниц
+					'options' => [
+						'class' => 'pagination pagination-circle pg-blue mb-0'],
+						'linkOptions' => ['class' => 'page-link'],
 				],
 			]);
 		}?>

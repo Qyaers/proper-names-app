@@ -23,8 +23,6 @@ class PersonalAccountUserForm extends Model
 			[['login','email','password'], 'required'],
 			[['login'], 'unique', 'targetClass' => '\app\models\User', 'message' => 'This username has already been taken.'],
 			[['email'], 'unique', 'targetClass' => '\app\models\User', 'message' => 'This email address has already been taken.'],
-			['name', 'unique' ,'targetClass' => '\app\models\ProperName' , 'message' => 'Такое имя собственное уже существует'],
-			['description','unique','targetClass' => '\app\models\ProperName' , 'message' => 'Такое описание уже существует'],
 	];
 	}
 
@@ -32,7 +30,7 @@ class PersonalAccountUserForm extends Model
 		return ProperName::find()->where(['user_id' => $userId])->all();
 	}
 
-	public function updateUserData(){
+	public function updateUserData($userId,$login,$password,$email){
 		
 		if (!$this->validate()) {
 			return null;
@@ -44,7 +42,7 @@ class PersonalAccountUserForm extends Model
 		return $user->save() ? $user : null;
 	}
 
-	public function editUserRequest($data,$update){
+	public function editUserRequest($data){
 		try {
 				return Yii::$app->db->createCommand()
 				->update('PropersNames', ['name' => $data['name'],'description' => $data['description']], ['id' => $data['id']])

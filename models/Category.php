@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 
 class Category extends ActiveRecord 
@@ -19,9 +20,6 @@ class Category extends ActiveRecord
 		];
 	}
 
-	// public static function find(){
-	// 	return static::find();
-	// }
 	/**
 	 * {@inheritdoc}
 	 */
@@ -73,6 +71,63 @@ class Category extends ActiveRecord
 	public function getCategoryAncestor($ancestor){
 
 		return $this->$ancestor;
+	}
+
+// TODO Проверить, как работает
+
+	public function getAllCategory(){
+		return Category::find();
+	}
+
+	public function edit($data){
+
+		$category = new Category();
+		$category->id = $data['id'];
+		$category->name = $data['name'];
+		$category->ancestor = $data['ancestor'];
+		
+		return \Yii::$app->db->createCommand()
+		->update('Category', [
+			'name' => $category->name, 'ancestor'=> $category->ancestor
+		],"id = $category->id")
+		->execute();
+	}
+
+	public function remove($deletedId){
+		$deleteArray = $deletedId;
+		$deleted = $error = false;
+		foreach ($deleteArray as $idDel) {
+			if(Category::findOne($idDel)->delete()) {
+				$deleted = true;
+			} else {
+				$error = true;
+				break;
+			}
+		}
+		if ($deleted && !$error) {
+			$res = [
+				"message" => "Selected element was terminated",
+				"status" => "ok"
+			];
+		} else {
+			$res = [
+				"message" => "Error in query.",
+				"status" => "error"
+			];
+		}
+		return json_encode($res);
+	}
+
+	public function add($data){
+		if (Category::findOne(["name" => $data['name']])) {
+			return null;
+		} else{
+			$category = new Category();
+			$category->name = $data['name'];
+			$category->ancestor = $data['ancestor'];
+			$category->save();
+			return Category::findOne(['name' => $data['name']]);
+		}
 	}
 }
 ?>

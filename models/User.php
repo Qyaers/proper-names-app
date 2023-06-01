@@ -15,8 +15,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public function rules () {
 		return [
 			[['login','password','email'],'required'],
-			[['login'],'string','max '=>15],
-			[['password','email','accesToken','authKey',],'string','max '=>32],
+			// [['login'],'string','max '=>15],
+			// [['password','email','accesToken','authKey',],'string','max '=>15],
 		];
 	}
 
@@ -105,5 +105,69 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 		return $this->password === $password;
 	}
 
+	public function getAllUsers(){
+		return User::find();
+	}
+
+	public function edit($data){
+
+		$user = new User();
+		$user->id = $data['id'];
+		$user->login = $data['login'];
+		$user->password = $data['password'];
+		$user->email = $data['email'];
+		$user->role = $data['role'];
+		$user->acessToken = $data['acessToken'];
+		$user->authKey = $data['authKey'];
+
+		return \Yii::$app->db->createCommand()
+		->update('User', [
+			'login' => $user->login, 'password'=> $user->password,
+			'email'=> $user->email,'role'=> $user->role,
+			'acessToken'=> $user->acessToken, 'authKey'=>$user->acessToken
+		],"id = $user->id")
+		->execute();
+	}
+
+	public function remove($deletedId){
+		$deleteArray = $deletedId;
+		$deleted = $error = false;
+		foreach ($deleteArray as $idDel) {
+			if(User::findOne($idDel)->delete()) {
+				$deleted = true;
+			} else {
+				$error = true;
+				break;
+			}
+		}
+		if ($deleted && !$error) {
+			$res = [
+				"message" => "Selected element was terminated",
+				"status" => "ok"
+			];
+		} else {
+			$res = [
+				"message" => "Error in query.",
+				"status" => "error"
+			];
+		}
+		return json_encode($res);
+	}
+
+	public function add($data){
+		if (User::findOne(["name" => $data['name']] || User::findOne(["description" => $data['description']]))) {
+			return null;
+		} else{
+			$user = new User();
+			$user->login = $data['login'];
+			$user->password = $data['password'];
+			$user->email = $data['email'];
+			$user->role = $data['role'];
+			$user->acessToken = $data['acessToken'];
+			$user->authKey = $data['authKey'];
+			$user->save();
+			return User::findOne(['name' => $user->name]);
+		}
+	}
 }
 ?>

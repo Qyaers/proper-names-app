@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<?= $form->field($model, 'password')->passwordInput(['placeholder' => '*******', 'value'=>Yii::$app->user->identity->password,'autofocus' => true])->label('Пароль')  ?>
 
 				<?= $form->field($model, 'email')->textInput(['placeholder' => Yii::$app->user->identity->email, 'value'=>Yii::$app->user->identity->email,'autofocus' => true])->label('Email') ?>
+				<?= $form->field($model, 'userId')->hiddenInput(['value'=> Yii::$app->user->id])->label(false); ?>
 					<div class="auths-btns">
 						<?= Html::submitButton('Изменить', ['class' => 'btn', 'name' => 'login-button']) ?> 
 					</div>
