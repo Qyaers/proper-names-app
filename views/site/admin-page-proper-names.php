@@ -5,7 +5,7 @@
 use yii\helpers\Html;
 
 $this->title = 'Имена собственные';
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="site-admin-page-proper-names">
 <h1>Имена собственные</h1>

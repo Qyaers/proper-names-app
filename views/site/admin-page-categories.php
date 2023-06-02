@@ -5,7 +5,7 @@
 use yii\helpers\Html;
 
 $this->title = 'Категории';
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="site-admin-page-category">
 <h1>Категории</h1>

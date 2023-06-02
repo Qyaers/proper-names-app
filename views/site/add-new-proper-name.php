@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\base\Model;
 
-$this->title = 'Добавить новое имя собственное';
+$this->title = 'Добавить новые имена собственные';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-add-new-proper-name">
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<div class="row ms-5">
 				<div class="">
 					<?php $form = ActiveForm::begin(['id' => 'form-proper-name']); ?>
-						<?= $form->field($model, 'name')->textInput(['autofocus' => true])->label('Наименование') ?>
+						<?= $form->field($model, 'name')->textInput()->label('Наименование') ?>
 						<?= $form->field($model, 'description')->textarea(['rows' => '6'])->label('Описание') ?>
 						<?= $form->field($model, 'category_id')->dropDownList(
 							\yii\helpers\ArrayHelper::map(\app\models\Category::find()->all(), 'id', 'name')

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\base\Model;
 
-$this->title = 'Выргузить информацию';
+$this->title = 'Выгрузить информацию';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-data-download">

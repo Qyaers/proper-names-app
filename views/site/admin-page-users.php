@@ -5,7 +5,7 @@
 use yii\helpers\Html;
 
 $this->title = 'Пользователи';
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="site-admin-page-users">
 <h1>Пользователи</h1>

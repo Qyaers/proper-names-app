@@ -1,9 +1,6 @@
 body,html{
 	margin: 0;
 	padding: 0;
-	font-family: 'Inter';
-	font-style: normal;
-	font-weight: 700;
 	color: #FFFF;
 	width: 100%;
 	height: 100%;
@@ -11,7 +8,6 @@ body,html{
 a,h1,ul{
 	text-decoration: none;
 	color: #FFFF;
-	font-size: 15px;
 	margin: 0;
 	padding: 0;
 }
@@ -26,17 +22,12 @@ p,td,tr{
 	padding: 0;
 }
 h1{
-	font-size: 32px;
 	text-align: center;
 }
 .btn {
 	cursor: pointer;
 	background-color: #403DC7;
 	border: none;
-	font-family: 'Inter';
-	font-style: normal;
-	font-weight: 700;
-	font-size: 15px;
 	color: white;
 }
 .wrapper {
@@ -67,7 +58,7 @@ h1{
 	margin-left: 20px;
 }
 
-.menu__link:hover, .menu_link__active{
+.menu__link:hover, .menu_link__active {
 	border-bottom: 1px solid white;
 }
 
@@ -90,13 +81,11 @@ h1{
 	align-items: center;
 	padding-right: 20px;
 }
-.login-auth__btn:hover {
-}
+
 .login-auth__btn:hover {
 	border-bottom: 1px solid white;
 }
-.registration__auth:hover {
-}
+
 .reg__btn:hover {
 	border-bottom: 1px solid white;
 }
@@ -126,7 +115,6 @@ h1{
 	padding: 0 10px 0 10px;
 	border-radius: 20px;
 	width: 500px;
-	font-size: 20px;
 	border-style: none;
 	outline: 0;
 }
@@ -137,10 +125,6 @@ h1{
 	cursor: pointer;
     background-color: #403DC7;
     border: none;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 15px;
     color: white;
 }
 .btn-search {
@@ -220,6 +204,7 @@ h1{
 	}
 	.menu__navbar,.menu__nav,.menu__link {
 		display: none;
+		
 	}
 	.burger-menu__nav{
 		display: initial;
@@ -314,12 +299,9 @@ h1{
 	}
 	.burger-menu__link {
 		padding: 40px;
-		font-family: 'Roboto', sans-serif;
-		font-size: 18px;
 		text-decoration: none;
 		text-transform: uppercase;
 		letter-spacing: 5px;
-		font-weight: 400;
 	}
 	.burger-menu__link:hover {
 		text-decoration: underline white;
@@ -341,7 +323,6 @@ h1{
 		padding: 0 10px 0 10px;
 		border-radius: 20px;
 		width: 500px;
-		font-size: 20px;
 		border-style: none;
 		outline: 0;
 	}
@@ -356,22 +337,14 @@ h1{
 		padding: 0 10px 0 10px;
 		border-radius: 20px;
 		width: 500px;
-		font-size: 20px;
 		border-style: none;
 		outline: 0;
 	}
 	.burger-menu__link {
 		padding: 40px;
-		font-family: 'Roboto', sans-serif;
-		font-size: 12px;
 		text-decoration: none;
 		text-transform: uppercase;
 		letter-spacing: 5px;
-		font-weight: 400;
-	}
-	.active{
-		border-bottom: 1px solid white;
-		border-top: 1px solid white;
 	}
 }
 @media screen and (max-width: 680px) {
@@ -379,13 +352,24 @@ h1{
 		padding: 0 10px 0 10px;
 		border-radius: 20px;
 		width: 400px;
-		font-size: 20px;
 		border-style: none;
 		outline: 0;
 	}
 	.search-field{
 		width: 460px;
 	}
+
+	.breadcrumb{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.breadcrumb-item + .breadcrumb-item,.breadcrumb-item + .breadcrumb-item::before {
+		padding: 0px;
+		color: var(--bs-breadcrumb-divider-color);
+		content: var(--bs-breadcrumb-divider, "") /* rtl: var(--bs-breadcrumb-divider, "/") */;
+	}
+
 }
 
 @media screen and (max-width: 480px) {
@@ -393,7 +377,6 @@ h1{
 		padding: 0 10px 0 10px;
 		border-radius: 20px;
 		width: 300px;
-		font-size: 20px;
 		border-style: none;
 		outline: 0;
 	}
@@ -424,15 +407,15 @@ h1{
    display: none; 
 }
 
-
-
-
 /* --------------- */
 
+.admin-page__menu,.nav-link,.nav-link:hover{
+	color:white !important;
+	text-decoration: none;
+}
 
-.not-set {
+.not-set, .error{
 	color: #c55;
-	font-style: italic;
 }
 
 /* add sorting icons to gridview sort links */

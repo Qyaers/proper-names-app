@@ -31,7 +31,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 </head>
 <body>
 <?php $this->beginBody() ?>
-<div class="wrapper">
 	<header id="header" class="header">
 		<div>
 			<div class="header__menu">
@@ -56,6 +55,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 									['label' => 'Расширенный поиск', 'url' => ['extended-search']],
 									Yii::$app->user->isGuest? [] :		
 									['label' => 'Добавить новую информацию', 'url' => ['add-new-proper-name']],
+									Yii::$app->user->isGuest? [] :
+									['label' => 'Выгрузить информацию', 'url' => ['data-download']],
 									],
 									'itemOptions'=>['class'=>'burger-menu__link']
 								]);
@@ -69,30 +70,50 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 							echo Menu::widget([
 								'options' => ['class' => 'navbar-nav'],
 								'items' => [
-									['label' => 'О нас', 'url' => ['about']],
-									['label' => 'Список категорий имен собственных', 'url' => ['list-category']],
-									['label' => 'Расширенный поиск', 'url' => ['extended-search']],
-									Yii::$app->user->isGuest? [] :		
-									['label' => 'Добавить новую информацию', 'url' => ['add-new-proper-name']],
+										['label' => 'О нас', 'url' => ['about']],
+										['label' => 'Список категорий имен собственных', 'url' => ['list-category']],
+										['label' => 'Расширенный поиск', 'url' => ['extended-search']],
+										Yii::$app->user->isGuest? [] :		
+										['label' => 'Добавить новые имена собственные', 'url' => ['add-new-proper-name']],
+										Yii::$app->user->isGuest? [] :		
+										['label' => 'Выгрузить информацию', 'url' => ['data-download']],
 									],
 									'itemOptions'=>['class'=>'menu__link']
 								]);
 						?>
 					</nav>
 				</div>
+				<?php
+				echo "
+				<div class='admin-page__menu'>".
+						Nav::widget([
+							'options' => ['class' => ''],
+									'items' =>[
+							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['login'] ] 
+							:
+							['label' => "Администрирование базы данных",'options' => ['id' => 'down_history'], 
+								'items'=>[
+									['label' => 'Таблица пользователей', 'url' => ['/site/admin-page-users'],'options' => ['id' => 'wn_history']],
+									['label' => 'Таблица категорий', 'url' => ['/site/admin-page-categories'],'options' => ['id' => 'wn_history']],
+									['label' => 'Таблица Имен собственных', 'url' => ['/site/admin-page-proper-names'],'options' => ['id' => 'wn_history']],
+								]
+							],
+						]])
+					?>
+				</div>
 			</div>
 			<div class="header__auths">
 				<div class="login__auth">
 					<?php
 						echo Nav::widget([
-							'options' => ['class' => 'login-auth__btn navbar-nav'],
+							'options' => ['class' => ' '],
 									'items' =>[
 							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['login'] ] 
 							:
 							['label' => Yii::$app->user->identity->login,'options' => ['id' => 'down_history'], 
 								'items'=>[
 									['label' => 'Личный кабинет', 'url' => ['/site/personal-account'],'options' => ['id' => 'wn_history']],
-									'<a class="123" id = "wn_history">'
+									'<a class="" id = "wn_history">'
 									. Html::beginForm(['logout'])
 									. Html::submitButton('Выйти',['class' => 'dropdown-item'])
 									. Html::endForm()
@@ -140,7 +161,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 		</div>
 		</div>
 	</footer>
-</div>
 <?php $this->endBody() ?>
 </body>
 </html>

@@ -20,14 +20,13 @@ class AppAsset extends AssetBundle
 	public $basePath = '@webroot';
 	public $baseUrl = '@web';
 	public $css = [
+		'css/site.css',
 		'css/css.css',
 	];
 	public $js = [
 	'js/js.js',
 	'js/fileParser.js',
 	'js/dbWork.js',
-	// 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-
 	];
 	public $depends = [
 		'yii\web\YiiAsset',

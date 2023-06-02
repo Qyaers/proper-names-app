@@ -36,13 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
 					</div>
 				</div>
 		</div>
-		//TODO Добавить возможность редактирования и удаления смотри ссылку на гх 
-		// https://github.com/Qyaers/term-app/blob/master/resources/views/admin/term.blade.php
-		// https://github.com/Qyaers/term-app/blob/master/resources/js/app.js#LL26C1-L26C1
-		<br>
-		<br>
-		<br>
-		<br>
 		<?php ActiveForm::end();
 		
 		if(!empty($properNames)){

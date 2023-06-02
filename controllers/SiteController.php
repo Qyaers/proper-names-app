@@ -210,74 +210,76 @@ class SiteController extends Controller
 	public function actionAddNewCategory()
 	{
 		$model = new CategoryForm();
-
-		if(Yii::$app->request->post()){
-		
-			$data = Yii::$app->getRequest()->getBodyParams();
-			if(count($data)>2){
-				$dublicates=[];
-				foreach ($data as $value) {
-					$model->name = $value['name'];
-					if(!$model->getNameCategory()){
-						Yii::$app->db->createCommand('INSERT INTO `Category` (`id`,`name`,`ancestor`) VALUES (:id,:name,:ancestor)', [
-							':id' => $value['id'],
-							':name' => $value['name'],
-							':ancestor' => $value['ancestor']
-						])->execute();
-					}else if($model->getNameCategory()){
-						array_push($dublicates,$value['name']);
+		if($this->isAdmin()){
+			if(Yii::$app->request->post()){
+			
+				$data = Yii::$app->getRequest()->getBodyParams();
+				if(count($data)>2){
+					$dublicates=[];
+					foreach ($data as $value) {
+						$model->name = $value['name'];
+						if(!$model->getNameCategory()){
+							Yii::$app->db->createCommand('INSERT INTO `Category` (`id`,`name`,`ancestor`) VALUES (:id,:name,:ancestor)', [
+								':id' => $value['id'],
+								':name' => $value['name'],
+								':ancestor' => $value['ancestor']
+							])->execute();
+						}else if($model->getNameCategory()){
+							array_push($dublicates,$value['name']);
+						}
+					}
+					if(!empty($dublicates)){
+						return \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => [
+								'message' => $dublicates,
+								'code' => 200,
+								'error' => 'dublicates'
+							],
+						]);
+					}else{
+						return \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => [
+								'message' => "Вся загруженная информация занесена!",
+								'code' => 200,
+								'error' => null
+							],
+						]);
 					}
 				}
-				if(!empty($dublicates)){
-					return \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => [
-							'message' => $dublicates,
-							'code' => 200,
-							'error' => 'dublicates'
-						],
-					]);
-				}else{
-					return \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => [
-							'message' => "Вся загруженная информация занесена!",
-							'code' => 200,
-							'error' => null
-						],
-					]);
-				}
-			}
-			else if($model->load(Yii::$app->request->post())){
-				$dublicates = null;
-				if($model->validate()){
-					Yii::$app->db->createCommand('INSERT INTO `Category` (`name`,`ancestor`) VALUES (:name,:ancestor)', [
-						':name' => $model->name,
-						':ancestor' => $model->ancestor
-					])->execute();
-					
+				else if($model->load(Yii::$app->request->post())){
+					$dublicates = null;
+					if($model->validate()){
+						Yii::$app->db->createCommand('INSERT INTO `Category` (`name`,`ancestor`) VALUES (:name,:ancestor)', [
+							':name' => $model->name,
+							':ancestor' => $model->ancestor
+						])->execute();
+						
+						return $this->render('add-new-category', [
+							'model' => $model,
+							'message' => "Загрузка данных успешна"
+						]);
+					}
 					return $this->render('add-new-category', [
 						'model' => $model,
-						'message' => "Загрузка данных успешна"
+						'message' => ""
 					]);
 				}
-				return $this->render('add-new-category', [
-					'model' => $model,
-					'message' => ""
-				]);
 			}
-		}
-		
-		if(Yii::$app->user->isGuest){
-			return $this->goHome();
-		}
+			
+			if(Yii::$app->user->isGuest){
+				return $this->goHome();
+			}
 
-		return $this->render('add-new-category', [
-			'model' => $model,
-			'message' => ""
-		]);
+			return $this->render('add-new-category', [
+				'model' => $model,
+				'message' => ""
+			]);
+		}
+		return $this->goHome();
 	}
 
 	public function actionListCategory()
@@ -299,6 +301,8 @@ class SiteController extends Controller
 	{
 		if($request = Yii::$app->request){
 			$idCategory = $request->get('id');
+			$prevTitle = $request->get('prevTitle');
+
 			$subCategory = new ActiveDataProvider([
 				'query' => Category::find()->where(['ancestor' => $idCategory]),
 				'pagination' => [
@@ -307,7 +311,8 @@ class SiteController extends Controller
 			]);
 			if(isset(Yii::$app->user->identity->id)){
 				$propNames = new ActiveDataProvider([
-					'query' => ProperName::find()->where(['category_id' => $idCategory])->andWhere(['aproved' => true])->orWhere(['user_id' => Yii::$app->user->identity->id]),
+					'query' => ProperName::find()->where(['category_id' => $idCategory])->andWhere(['aproved' => true])->orWhere(['user_id' => Yii::$app->user->identity->id])
+					->andWhere(['category_id' => $idCategory]),
 					'pagination' => [
 						'pageSize' => 15,
 					],
@@ -386,13 +391,18 @@ class SiteController extends Controller
 
 		if($model->load(Yii::$app->request->post())){
 
-			if($model->properNameSearch){
-				$propNameInfo = ProperName::findOne(['name'=> $model->propName]);
-
-				return $this->render('proper-name', [
-					'title' => $model->propName,
-					'propNames' => $propNameInfo,
-				]);
+			if($model->properNameSearch && $model->propName){
+				if($propNameInfo = ProperName::findOne(['name'=> $model->propName])){
+					return $this->render('proper-name', [
+						'title' => $model->propName,
+						'propNames' => $propNameInfo,
+					]);
+				}else{
+					return $this->render('proper-name', [
+						'title' => "Ошибка",
+						'propNames' => null,
+					]);
+				}
 			}
 			else if($model->categorySearch){
 				$idCategory = $model->category;
@@ -412,16 +422,17 @@ class SiteController extends Controller
 					],
 				]);
 	
-				return $this->render('category-info', [
+				return $this->render("category-info", [
 					'subCategory' => $subCategory,
 					'title' => $categoryName->name,
 					'propNames' => $propNames,
+					'id' => $idCategory
 				]);
 			}
 			else if(is_null($model->categorySearch) && is_null($model->categorySearch)){
 				return $this->render('extended-search',[
 					'model' => $model,
-					'message' => "Выберете хотябы один вариант поиска"
+					'message' => "Произошла ошибка, во время поиска, убедитесь, что у вас выбран вариант поиска и заполнено поле поиска."
 				]);
 			}
 		}
@@ -507,183 +518,192 @@ class SiteController extends Controller
 		]);
 	}
 
-	public function actionAdminPageCategorys(){
-
-		$model = new Category();
-		$querry = $model->getAllCategory();
-		$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 25]);
-		$categories = $querry->offset($pages->offset)->limit($pages->limit)->all();
-		if($request = Yii::$app->request->post()){
-			$data = $request;
-			if(isset($data['type']) && $data['type'] == 'edit'){
-				$changeElem = $model->edit($data);
-				if ($changeElem) {
-					$result = Category::findOne(['id'=>$data['id']]);
+	public function actionAdminPageCategories(){
+		if($this->isAdmin()){
+			$model = new Category();
+			$querry = $model->getAllCategory();
+			$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 25]);
+			$categories = $querry->offset($pages->offset)->limit($pages->limit)->all();
+			if($request = Yii::$app->request->post()){
+				$data = $request;
+				if(isset($data['type']) && $data['type'] == 'edit'){
+					$changeElem = $model->edit($data);
+					if ($changeElem) {
+						$result = Category::findOne(['id'=>$data['id']]);
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $result,
+						]);
+					} else {
+						$result = ["error"=>"Ошибка изменения базы."];
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $result
+						]);
+					}
+				}
+				if(isset($data['type']) && $data['type']=='remove'){
 					return  \Yii::createObject([
 						'class' => 'yii\web\Response',
 						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $result,
-					]);
-				} else {
-					$result = ["error"=>"Ошибка изменения базы."];
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $result
+						'data' => $model->remove($data['id'])
 					]);
 				}
-			}
-			if(isset($data['type']) && $data['type']=='remove'){
-				return  \Yii::createObject([
-					'class' => 'yii\web\Response',
-					'format' => \yii\web\Response::FORMAT_JSON,
-					'data' => $model->remove($data['id'])
-				]);
-			}
-			if(isset($data['type']) && $data['type']=='add'){
-				$newInfo = $model->add($data);
-				if($newInfo){
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $newInfo 
-					]);
-				}else{
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => [
-							"status" => "error",
-							"message" => "Такой термин уже существует"
-						],
-					]);
+				if(isset($data['type']) && $data['type']=='add'){
+					$newInfo = $model->add($data);
+					if($newInfo){
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $newInfo 
+						]);
+					}else{
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => [
+								"status" => "error",
+								"message" => "Такой термин уже существует"
+							],
+						]);
+					}
 				}
 			}
+			return $this->render('admin-page-categories',
+				compact('categories','pages'));
 		}
-		return $this->render('admin-page-categorys',
-			compact('categories','pages'));
+		return $this->goHome();
 	}
 
 	public function actionAdminPageProperNames(){
+		if($this->isAdmin()){
+			$model = new ProperName();
+			$querry = $model->getAllProperNames();
+			$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 25]);
+			$properNames = $querry->offset($pages->offset)->limit($pages->limit)->all();
 
-		$model = new ProperName();
-		$querry = $model->getAllProperNames();
-		$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 25]);
-		$properNames = $querry->offset($pages->offset)->limit($pages->limit)->all();
+			if($request = Yii::$app->request->post()){
+				$data = $request;
 
-		if($request = Yii::$app->request->post()){
-			$data = $request;
+				if(isset($data['type']) && $data['type'] == 'edit'){
+					$changeElem = $model->edit($data);
+					$data['aproved']  = $data['aproved'] == "Одобренно"?1:0; 
 
-			if(isset($data['type']) && $data['type'] == 'edit'){
-				$changeElem = $model->edit($data);
-				$data['aproved']  = $data['aproved'] == "Одобренно"?1:0; 
-
-				if ($changeElem) {
-					$result = ProperName::findOne(['id'=>$data['id']]);
+					if ($changeElem) {
+						$result = ProperName::findOne(['id'=>$data['id']]);
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $result,
+						]);
+					} else {
+						$result = ["error"=>"Ошибка изменения базы."];
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $result
+						]);
+					}
+				}
+				if(isset($data['type']) && $data['type']=='remove'){
 					return  \Yii::createObject([
 						'class' => 'yii\web\Response',
 						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $result,
-					]);
-				} else {
-					$result = ["error"=>"Ошибка изменения базы."];
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $result
+						'data' => $model->remove($data['id'])
 					]);
 				}
-			}
-			if(isset($data['type']) && $data['type']=='remove'){
-				return  \Yii::createObject([
-					'class' => 'yii\web\Response',
-					'format' => \yii\web\Response::FORMAT_JSON,
-					'data' => $model->remove($data['id'])
-				]);
-			}
-			if(isset($data['type']) && $data['type']=='add'){
-				$newInfo = $model->add($data);
-				if($newInfo){
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $newInfo 
-					]);
-				}else{
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => [
-							"status" => "error",
-							"message" => "Такое имя собственное уже существует"
-						],
-					]);
+				if(isset($data['type']) && $data['type']=='add'){
+					$newInfo = $model->add($data);
+					if($newInfo){
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $newInfo 
+						]);
+					}else{
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => [
+								"status" => "error",
+								"message" => "Такое имя собственное уже существует"
+							],
+						]);
+					}
 				}
 			}
+			return $this->render('admin-page-proper-names',
+				compact('properNames','pages'));
 		}
-		return $this->render('admin-page-proper-names',
-			compact('properNames','pages'));
+		return $this->goHome();
+	}
+
+	public function actionAdminPageUsers(){
+		if($this->isAdmin()){
+			$model = new User();
+			$querry = $model->getAllUsers();
+			$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 25]);
+			$users = $querry->offset($pages->offset)->limit($pages->limit)->all();
+
+			if($request = Yii::$app->request->post()){
+				$data = $request;
+
+				if(isset($data['type']) && $data['type'] == 'edit'){
+					$changeElem = $model->edit($data);
+					if ($changeElem) {
+						$result = User::findOne(['id'=>$data['id']]);
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $result,
+						]);
+					} else {
+						$result = ["error"=>"Ошибка изменения базы."];
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $result
+						]);
+					}
+				}
+				if(isset($data['type']) && $data['type']=='remove'){
+					return  \Yii::createObject([
+						'class' => 'yii\web\Response',
+						'format' => \yii\web\Response::FORMAT_JSON,
+						'data' => $model->remove($data['id'])
+					]);
+				}
+				if(isset($data['type']) && $data['type']=='add'){
+					$newInfo = $model->add($data);
+					if($newInfo){
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => $newInfo 
+						]);
+					}else{
+						return  \Yii::createObject([
+							'class' => 'yii\web\Response',
+							'format' => \yii\web\Response::FORMAT_JSON,
+							'data' => [
+								"status" => "error",
+								"message" => "Такое имя пользователя, или email уже существуют."
+							],
+						]);
+					}
+				}
+			}
+			return $this->render('admin-page-users',
+				compact('users','pages'));
+		}
+		return $this->goHome();
 	}
 
 
-
-	//TODO сделать таблицу пользователей
-	public function actionAdminPageUsers(){
-
-		$model = new User();
-		$querry = $model->getAllUsers();
-		$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 25]);
-		$users = $querry->offset($pages->offset)->limit($pages->limit)->all();
-
-		if($request = Yii::$app->request->post()){
-			$data = $request;
-
-			if(isset($data['type']) && $data['type'] == 'edit'){
-				$changeElem = $model->edit($data);
-				if ($changeElem) {
-					$result = User::findOne(['id'=>$data['id']]);
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $result,
-					]);
-				} else {
-					$result = ["error"=>"Ошибка изменения базы."];
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $result
-					]);
-				}
-			}
-			if(isset($data['type']) && $data['type']=='remove'){
-				return  \Yii::createObject([
-					'class' => 'yii\web\Response',
-					'format' => \yii\web\Response::FORMAT_JSON,
-					'data' => $model->remove($data['id'])
-				]);
-			}
-			if(isset($data['type']) && $data['type']=='add'){
-				$newInfo = $model->add($data);
-				if($newInfo){
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => $newInfo 
-					]);
-				}else{
-					return  \Yii::createObject([
-						'class' => 'yii\web\Response',
-						'format' => \yii\web\Response::FORMAT_JSON,
-						'data' => [
-							"status" => "error",
-							"message" => "Такое имя пользователя, или email уже существуют."
-						],
-					]);
-				}
-			}
-		}
-		return $this->render('admin-page-users',
-			compact('users','pages'));
+	public function isAdmin(){
+		$userRole = Yii::$app->user->identity->role;
+		return $userRole == 'Admin'?true:false;
 	}
 }

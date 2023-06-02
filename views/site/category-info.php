@@ -2,14 +2,41 @@
 
 use yii\helpers\Html;
 use yii\widgets\ListView;
+use yii\helpers\Url;
+use app\models\Category;
+
 
 $this->title = $title;
+
+if(Yii::$app->request->get('prevTitle') &&  Yii::$app->request->get('prevTitle') != 'Список категорий имен собственных'){
+	$id = Category::findOne(['name'=>Yii::$app->request->get('prevTitle')])?Category::findOne(['name'=>Yii::$app->request->get('prevTitle')])->id:null;
+	$prevId = Yii::$app->request->get('prevId');
+	$prevTitel= Yii::$app->request->get('prevTitle');
+
+	if($prevTitel != 'Список категорий имен собственных'){
+		if($prevId){
+			$this->params['breadcrumbs'][] = ['label' => $prevTitel,
+			'url'=> ["/site/category-info?id=".$prevId." &name=".$prevTitel.""]];
+		}
+		else{
+		$this->params['breadcrumbs'][] = ['label' => $prevTitel,
+		'url'=> ["/site/category-info?id=".$id." &name=".$prevTitel.""]];
+		}
+	}
+}
+else{
+	$this->params['breadcrumbs'][] = ['label' => "Список категорий имен собственных",
+	'url'=> ["/site/list-category"]];
+}
+	$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="site-category-info">
 
 	<h1><?= Html::encode($this->title) ?></h1>
 	<div>
-		<?php  
+		<?php 
+		
 		if($subCategory){
 			echo "<h2>Подкатегории</h2>";
 		
