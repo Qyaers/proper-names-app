@@ -146,7 +146,7 @@ class SiteController extends Controller
 					->select('id')
 					->where(['name' => $value['category']])
 					->one())['id'];
-					if(!$model->getProperName() && !$model->getDescription()){
+					if(!$model->getProperName()){
 						Yii::$app->db->createCommand('INSERT INTO `PropersNames` (`name`,`description`,`user_id`,`category_id`) VALUES (:name,:description,:user_id,:category_id)', [
 							':name' => $value['name'],
 							':description' => $value['description'],
@@ -315,7 +315,7 @@ class SiteController extends Controller
 					'query' => ProperName::find()->where(['category_id' => $idCategory])->andWhere(['aproved' => true])->orWhere(['user_id' => Yii::$app->user->identity->id])
 					->andWhere(['category_id' => $idCategory]),
 					'pagination' => [
-						'pageSize' => 15,
+						'pageSize' => 50,
 					],
 				]);
 			} else{
@@ -582,7 +582,7 @@ class SiteController extends Controller
 		if($this->isAdmin()){
 			$model = new ProperName();
 			$querry = $model->getAllProperNames();
-			$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 25]);
+			$pages = new \yii\data\Pagination(['totalCount' => $querry->count(),'pageSize' => 250]);
 			$properNames = $querry->offset($pages->offset)->limit($pages->limit)->all();
 
 			if($request = Yii::$app->request->post()){
@@ -701,7 +701,6 @@ class SiteController extends Controller
 		}
 		return $this->goHome();
 	}
-
 
 	public function isAdmin(){
 		$userRole = Yii::$app->user->identity->role;

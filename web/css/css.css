@@ -509,7 +509,7 @@ a.desc:after {
 	color: white;
 }
 
-.category-list{
+.category-list, .proper-names__list{
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -520,7 +520,7 @@ a.desc:after {
 .summary{
 
 }
-.category{
+.category,.proper-names{
 	margin: 20px;
 	height: 20px;
 	width: 30%;

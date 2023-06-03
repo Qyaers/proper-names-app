@@ -41,29 +41,29 @@ else{
 			echo "<h2 class='mt-3'>Подкатегории</h2>";
 		
 			echo ListView::widget([
-				'dataProvider' => $subCategory, // переданные данные
-				'itemView' => 'list-category-item',// шаблон для вывода данных
+				'dataProvider' => $subCategory, 
+				'itemView' => 'list-category-item',
 
-				'options' => [ // настройка атрибутов для внешнего контейнера списка
-					'tag' => 'div', // заключаем сипсок в блок div
-					'class' => 'category-list', // класс блока div
-					'id' => 'category-list', // идентификатор блока div
+				'options' => [
+					'tag' => 'div',
+					'class' => 'category-list',
+					'id' => 'category-list', 
 				],
-				'itemOptions' => [ // опции для списка
-					'tag' => 'div', // заключаем список в тег div
+				'itemOptions' => [ 
+					'tag' => 'div',
 					'class' => 'category'
 				],
 
-				'emptyText' => 'Подкатегории отсутствуют', // выводим  'Список пуст', если даннах нет
-				'emptyTextOptions' => [ // опции для пустого контейнера
-					'tag' => 'p', // добавляем тег абзаца для пустого контейнера
+				'emptyText' => 'Подкатегории отсутствуют',
+				'emptyTextOptions' => [
+					'tag' => 'p',
 					'class' => 'empty-info'
 				],
 
-				'pager' => [ // постраничная разбивка
-					'firstPageLabel' => 'Первая', // ссылка на первую страницу
-					'lastPageLabel' => 'Последняя', // ссылка на последнюю странцу
-					'maxButtonCount' => 5, // количество отображаемых страниц
+				'pager' => [
+					'firstPageLabel' => 'Первая',
+					'lastPageLabel' => 'Последняя',
+					'maxButtonCount' => 5,
 				],
 			]);
 		}?>
@@ -74,32 +74,30 @@ else{
 			echo "<h2 class='mt-3'>Имена собственные выбранной категории</h2>";
 			
 			echo ListView::widget([
-				'dataProvider' => $propNames, // переданные данные
-				'itemView' => 'list-proper-names-item',// шаблон для вывода данных
+				'dataProvider' => $propNames, 
+				'itemView' => 'list-proper-names-item',
 
-				'options' => [ // настройка атрибутов для внешнего контейнера списка
-					'tag' => 'div', // заключаем сипсок в блок div
-					'class' => 'proper-names__list', // класс блока div
-					'id' => 'proper-names__list', // идентификатор блока div
+				'options' => [ 
+					'tag' => 'div',
+					'class' => 'proper-names__list',
+					'id' => 'proper-names__list',
 				],
-				'itemOptions' => [ // опции для списка
-					'tag' => 'div', // заключаем список в тег div
+				'itemOptions' => [ 
+					'tag' => 'div', 
 					'class' => 'proper-names'
 				],
 
-				'emptyText' => 'Имена собственные отсутствуют', // выводим  'Список пуст', если даннах нет
-				'emptyTextOptions' => [ // опции для пустого контейнера
-					'tag' => 'p', // добавляем тег абзаца для пустого контейнера
+				'emptyText' => 'Имена собственные отсутствуют', 
+				'emptyTextOptions' => [ 
+					'tag' => 'p',
 					'class' => 'empty-info'
 				],
 
-				'pager' => [ // постраничная разбивка
-					'firstPageLabel' => 'Первая', // ссылка на первую страницу
-					'lastPageLabel' => 'Последняя', // ссылка на последнюю странцу
-					'maxButtonCount' => 5, // количество отображаемых страниц
+				'pager' => [ 
+					'maxButtonCount' => 15, 
 					'options' => [
-						'class' => 'pagination pagination-circle pg-blue mb-0'],
-						'linkOptions' => ['class' => 'page-link'],
+						'class' => 'pagination pagination-circle mb-0'],
+						'linkOptions' => ['class' => 'btn page-link'],
 				],
 			]);
 		}?>
