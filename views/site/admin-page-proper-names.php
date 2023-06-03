@@ -43,7 +43,7 @@ $this->title = 'Имена собственные';
 	<?= \yii\widgets\LinkPager::widget(['pagination' => $pages,
 	'options' => [
 		'class' => 'pagination pagination-circle pg-blue mb-0'],
-		'linkOptions' => ['class' => 'page-link'],
+		'linkOptions' => ['class' => 'btn page-link'],
 	])?>
 <template id="addElement">
 	<tr>

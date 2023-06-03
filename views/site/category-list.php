@@ -16,8 +16,8 @@ echo ListView::widget([
 
 	'options' => [ // настройка атрибутов для внешнего контейнера списка
 		'tag' => 'div', // заключаем сипсок в блок div
-		'class' => 'country-list', // класс блока div
-		'id' => 'country-list', // идентификатор блока div
+		'class' => 'category-list', // класс блока div
+		'id' => 'category-list', // идентификатор блока div
 	],
 	'itemOptions' => [ // опции для списка
 		'tag' => 'div', // заключаем список в тег div
@@ -31,9 +31,10 @@ echo ListView::widget([
 	],
 
 	'pager' => [ // постраничная разбивка
-		'firstPageLabel' => 'Первая', // ссылка на первую страницу
-		'lastPageLabel' => 'Последняя', // ссылка на последнюю странцу
 		'maxButtonCount' => 5, // количество отображаемых страниц
+		'options' => [
+			'class' => 'pagination pagination-circle mb-0'],
+			'linkOptions' => ['class' => 'btn page-link'],
 	],
 ]);
 ?>

@@ -19,10 +19,15 @@ class PersonalAccountUserForm extends Model
 	public function rules()
 	{
 		return [
-			[['login','email'], 'trim'],
-			[['login','email','password'], 'required'],
-			[['login'], 'unique', 'targetClass' => '\app\models\User', 'message' => 'This username has already been taken.'],
-			[['email'], 'unique', 'targetClass' => '\app\models\User', 'message' => 'This email address has already been taken.'],
+			['login', 'trim'],
+			['login', 'required'],
+			['login', 'string', 'min' => 2, 'max' => 255],
+			['email', 'trim'],
+			['email', 'required'],
+			['email', 'email'],
+			['email', 'string', 'max' => 255],
+			['password', 'required'],
+			['password', 'string', 'min' => 6],
 	];
 	}
 
@@ -35,11 +40,18 @@ class PersonalAccountUserForm extends Model
 		if (!$this->validate()) {
 			return null;
 		}
-		$user = User::findOne($userId);
+		$user = new User();
 		$user->login = $login;
-		$user->password = $password;
+		$user->password = Yii::$app->security->generatePasswordHash($password);
 		$user->email = $email;
-		return $user->save() ? $user : null;
+
+		return \Yii::$app->db->createCommand()
+		->update('User', [
+			'login' => $user->login, 'password'=> $user->password,
+			'email'=> $user->email,'role'=> $user->role
+		],"id = $userId")
+		->execute() ? $user : null;;
+		
 	}
 
 	public function editUserRequest($data){

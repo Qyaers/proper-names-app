@@ -41,7 +41,4 @@ $this->params['breadcrumbs'][] = $this->title;
 		
 		<p class="error-text"><?= Html::encode($message)?></p>
 </div>
-
-
-	<code><?= __FILE__ ?></code>
 </div>

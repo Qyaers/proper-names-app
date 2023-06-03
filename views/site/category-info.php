@@ -38,7 +38,7 @@ else{
 		<?php 
 		
 		if($subCategory){
-			echo "<h2>Подкатегории</h2>";
+			echo "<h2 class='mt-3'>Подкатегории</h2>";
 		
 			echo ListView::widget([
 				'dataProvider' => $subCategory, // переданные данные
@@ -71,7 +71,7 @@ else{
 	<div>
 		<?php  
 		if($propNames){
-			echo "<h2>Имена собственные выбранной категории</h2>";
+			echo "<h2 class='mt-3'>Имена собственные выбранной категории</h2>";
 			
 			echo ListView::widget([
 				'dataProvider' => $propNames, // переданные данные

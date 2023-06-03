@@ -7,47 +7,37 @@ $this->title = 'Porpers Name App';
 <div class="site-index">
 
 	<div class="jumbotron text-center bg-transparent">
-		<h1 class="display-4">Congratulations!</h1>
-
-		<p class="lead">You have successfully created your Yii-powered application.</p>
-
-		<p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+		<h1 class="display-4">Добро пожаловать на наш сайт!</h1>
 	</div>
 
-	<div class="body-content">
-
-		<div class="row">
+	<div class="body-content mt-5 p-3">
+	<h2 style="text-align:center">Немного о том, что мы можем</h2>
+		<div class="row mt-5">
 			<div class="col-lg-4">
-					<h2>Heading</h2>
+					<h3>Поиск информации</h3>
 
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-						dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-						ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-						fugiat nulla pariatur.</p>
+					<p>На нашем сайте реализована возможность поиска по именам собственным,
+						а также по категориям. Для того чтобы пользоваться данным функционалом регистрация не нужна</p>
 
-					<p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
 			</div>
 			<div class="col-lg-4">
-					<h2>Heading</h2>
+					<h3>Загрузка информации</h3>
 
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-						dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-						ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-						fugiat nulla pariatur.</p>
+					<p>Если у вас вдруг возникнет необходимость хранить имена собственные вы можете пройти регистрацию
+						на нашем портале и после её прохождения ваш функционал расширется и вы сможете произвести загрузку 
+						информации в виде файла или по одному заполнив форму</p>
 
-					<p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
 			</div>
 			<div class="col-lg-4">
-					<h2>Heading</h2>
-
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-						dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-						ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-						fugiat nulla pariatur.</p>
-
-					<p><a class="btn btn-outline-secondary" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+					<h3>Выгрузка информации</h3>
+					<p>Если вы уже авторизированны или зарегестрированы, 
+						то вы можете выгрузить информацию об именах собственных различных категорий, данные выгружаются в формате объекта JSON</p>
+			</div>
+			<div class="mt-5">
+					<p style="text-align: center">Если вы хотите узнать больше о нас и возможностях, то нажмите кнопку ниже, или нажмите на ссылку сверху в меню «О нас»</p>
+					<p class="mt-2" style="text-align: center"><a style="align: center" class="btn" href="/site/about">Узнайте о нас</a></p>
 			</div>
 		</div>
-
 	</div>
 </div>
+

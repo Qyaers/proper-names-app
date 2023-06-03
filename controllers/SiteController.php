@@ -136,7 +136,8 @@ class SiteController extends Controller
 		$model = new ProperNameForm();
 		if(Yii::$app->request->post()){
 			$data = Yii::$app->getRequest()->getBodyParams();
-			if(count($data)>2){
+
+			if(!array_key_exists('ProperNameForm',$data)){
 				$dublicates=[];
 				foreach ($data as $value) {
 					$model->name = $value['name'];
@@ -203,7 +204,7 @@ class SiteController extends Controller
 		}
 		return $this->render('add-new-proper-name', [
 			'model' => $model,
-			'message' => ''
+			'message' => '',
 		]);
 	}
 
@@ -214,7 +215,7 @@ class SiteController extends Controller
 			if(Yii::$app->request->post()){
 			
 				$data = Yii::$app->getRequest()->getBodyParams();
-				if(count($data)>2){
+				if(!array_key_exists('CategoryForm',$data)){
 					$dublicates=[];
 					foreach ($data as $value) {
 						$model->name = $value['name'];

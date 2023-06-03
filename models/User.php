@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
@@ -91,7 +91,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	 */
 	public function validateAuthKey($authKey)
 	{
-		return $this->authKey === $authKey;
+		 return $this->getAuthKey() === $authKey;
 	}
 
 	/**
@@ -102,7 +102,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	 */
 	public function validatePassword($password)
 	{
-		return $this->password === $password;
+		return Yii::$app->security->validatePassword($password, $this->password);
+
 	}
 
 	public function getAllUsers(){
@@ -114,17 +115,15 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 		$user = new User();
 		$user->id = $data['id'];
 		$user->login = $data['login'];
-		$user->password = $data['password'];
+		$user->password = Yii::$app->security->generatePasswordHash($data['password']);
 		$user->email = $data['email'];
 		$user->role = $data['role'];
-		$user->acessToken = $data['acessToken'];
 		$user->authKey = $data['authKey'];
 
 		return \Yii::$app->db->createCommand()
 		->update('User', [
 			'login' => $user->login, 'password'=> $user->password,
-			'email'=> $user->email,'role'=> $user->role,
-			'acessToken'=> $user->acessToken, 'authKey'=>$user->acessToken
+			'email'=> $user->email,'role'=> $user->role, 'authKey'=>$user->authKey
 		],"id = $user->id")
 		->execute();
 	}
@@ -133,6 +132,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 		$deleteArray = $deletedId;
 		$deleted = $error = false;
 		foreach ($deleteArray as $idDel) {
+			if(ProperName::deleteAll(["user_id"=>$idDel]));
 			if(User::findOne($idDel)->delete()) {
 				$deleted = true;
 			} else {
@@ -160,14 +160,31 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 		} else{
 			$user = new User();
 			$user->login = $data['login'];
-			$user->password = $data['password'];
+			$user->password = setPassword($data['password']);
 			$user->email = $data['email'];
 			$user->role = $data['role'];
-			$user->acessToken = $data['acessToken'];
-			$user->authKey = $data['authKey'];
+			$user->authKey = generateAuthKey();
 			$user->save();
 			return User::findOne(['name' => $user->name]);
 		}
+	}
+
+	/**
+	 * Generates password hash from password and sets it to the model
+	 *
+	 * @param string $password
+	 */
+	public function setPassword($password)
+	{
+		 $this->password = Yii::$app->security->generatePasswordHash($password);
+	}
+
+	/**
+	 * Generates "remember me" authentication key
+	 */
+	public function generateAuthKey()
+	{
+		 $this->authKey = Yii::$app->security->generateRandomString();
 	}
 }
 ?>

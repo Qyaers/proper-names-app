@@ -21,10 +21,17 @@ class SignupForm extends Model
 	public function rules()
 	{
 		return [
-			[['login','email'], 'trim'],
-			[['login','email','password'], 'required'],
-			[['login'], 'unique', 'targetClass' => '\app\models\User', 'message' => 'This username has already been taken.'],
-			[['email'], 'unique', 'targetClass' => '\app\models\User', 'message' => 'This email address has already been taken.'],
+			['login', 'trim'],
+			['login', 'required'],
+			['login', 'unique', 'targetClass' => '\app\models\User', 'message' => 'This username has already been taken.'],
+			['login', 'string', 'min' => 2, 'max' => 255],
+			['email', 'trim'],
+			['email', 'required'],
+			['email', 'email'],
+			['email', 'string', 'max' => 255],
+			['email', 'unique', 'targetClass' => '\app\models\User', 'message' => 'This email address has already been taken.'],
+			['password', 'required'],
+			['password', 'string', 'min' => 6],
 	];
 	}
 
@@ -38,11 +45,8 @@ class SignupForm extends Model
 		$user = new User();
 		$user->login = $this->login;
 		$user->email = $this->email;
-		$user->password = $this->password;
-		return Yii::$app->db->createCommand('INSERT INTO `User` (`login`,`email`,`password`) VALUES (:login,:email,:password)', [
-						':login' => $user->login,
-						':email' => $user->email,
-						':password' => $user->password
-					])->execute() ? $user : null;
+		$user->setPassword($this->password);
+		$user->generateAuthKey();
+		return $user->save() ? $user : null;
 	}
 }

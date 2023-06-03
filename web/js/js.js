@@ -78,3 +78,25 @@ try {
 } catch {
 
 }
+try {
+	const searchPropName = document.querySelector("#extendedform-propernamesearch");
+	const searchCategory = document.querySelector("#extendedform-categorysearch");
+	searchCategory.addEventListener('click', () => {
+		if (searchCategory.checked) {
+			searchPropName.disabled = true;
+			console.log(searchCategory);
+		} else {
+			searchPropName.disabled = false;
+		}
+	});
+
+	searchPropName.addEventListener('click', () => {
+		if (searchPropName.checked) {
+			searchCategory.disabled = true;
+		} else {
+			searchCategory.disabled = false;
+		}
+	});
+} catch {
+
+}

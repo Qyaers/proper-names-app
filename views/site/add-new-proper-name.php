@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							\yii\helpers\ArrayHelper::map(\app\models\Category::find()->all(), 'id', 'name')
 						)->label('Категория') ?>
 						<?= $form->field($model, 'user_id')->hiddenInput(['value'=> Yii::$app->user->id])->label(false); ?>
+						<?= $form->field($model, 'type')->hiddenInput(['value'=> 'form' ])->label(false); ?>
 						<div class="form-group">
 							<?= Html::submitButton('Добавить из формы', ['class' => 'btn btn-primary', 'name' => 'add-button']) ?>
 						</div>

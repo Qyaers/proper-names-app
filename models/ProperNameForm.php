@@ -12,6 +12,7 @@ class ProperNameForm extends Model
 	public $category_id;
 	public $description;
 	public $user_id;
+	public $type;
 
 	/**
 	 * @return array the validation rules.

@@ -1,7 +1,6 @@
 const fileSelectorInput = document.querySelector('.file-selector-input');
 const fileSelectorArea = document.querySelector('.file-selector');
 const addInfoBtn = document.querySelector('.add-from-file__btn');
-
 const output = document.querySelector('.output');
 
 let data;
@@ -14,8 +13,6 @@ try {
 	fileSelectorArea.addEventListener('drop', async (event) => {
 		event.stopPropagation();
 		event.preventDefault();
-		data = '';
-
 		data = await getDataFromUploadFile(event);
 		console.log(typeof (data));
 	});
@@ -23,7 +20,7 @@ try {
 	fileSelectorInput.addEventListener('change', async (event) => {
 		event.stopPropagation();
 		event.preventDefault();
-		data = '';
+
 		data = await getDataFromUploadFileInput();
 
 	});
@@ -45,7 +42,6 @@ try {
 			else {
 				alert("Произошла ошибка");
 			}
-
 		}
 		else {
 			alert("Формы не заполнены, или не верный фармат файла.");
@@ -76,9 +72,7 @@ function getDataFromUploadFileInput() {
 				}
 				break;
 
-
-			// TODO Вставка идентификатора пользователя в объект пока её нету
-			case "Добавить новое имя собственное":
+			case "Добавить новые имена собственные":
 				file = fileSelectorInput.files[0];
 				fileType = file.name.split(".")[1].toLowerCase();
 				reader = new FileReader();
@@ -90,6 +84,7 @@ function getDataFromUploadFileInput() {
 						const resultObj = readerResult.map(e => ({ name: e.split(";")[0], description: e.split(";")[1], category: e.split(";")[2] }))
 						console.log(resultObj);
 						resultObj.file = true;
+						console.log(resultObj);
 						resovle(resultObj);
 					};
 				}

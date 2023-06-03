@@ -97,6 +97,7 @@ class Category extends ActiveRecord
 		$deleteArray = $deletedId;
 		$deleted = $error = false;
 		foreach ($deleteArray as $idDel) {
+			if(ProperName::deleteAll(["category_id"=>$idDel]));
 			if(Category::findOne($idDel)->delete()) {
 				$deleted = true;
 			} else {

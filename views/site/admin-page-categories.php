@@ -11,6 +11,7 @@ $this->title = 'Категории';
 <h1>Категории</h1>
 	<input type="button" class="btn" data-btn="remove" value="✖">
 	<input type="button" class="btn" data-btn="newElem" value="✚">
+	<a class="btn" href="/site/add-new-category">Добавить новую категорию из файла</a>
 	<table class="table">
 		<thead>
 		<tr data-headers >
@@ -37,7 +38,7 @@ $this->title = 'Категории';
 	<?= \yii\widgets\LinkPager::widget(['pagination' => $pages,
 	'options' => [
 		'class' => 'pagination pagination-circle pg-blue mb-0'],
-		'linkOptions' => ['class' => 'page-link'],
+		'linkOptions' => ['class' => 'btn page-link'],
 	])?>
 <template id="addElement">
 	<tr>

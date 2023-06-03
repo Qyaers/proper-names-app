@@ -89,15 +89,15 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 						Nav::widget([
 							'options' => ['class' => ''],
 									'items' =>[
-							Yii::$app->user->isGuest? ['label' =>  " Авторизоваться", 'url' => ['login'] ] 
-							:
+							!Yii::$app->user->isGuest && Yii::$app->user->identity->role == 'Admin'?
 							['label' => "Администрирование базы данных",'options' => ['id' => 'down_history'], 
-								'items'=>[
-									['label' => 'Таблица пользователей', 'url' => ['/site/admin-page-users'],'options' => ['id' => 'wn_history']],
-									['label' => 'Таблица категорий', 'url' => ['/site/admin-page-categories'],'options' => ['id' => 'wn_history']],
-									['label' => 'Таблица Имен собственных', 'url' => ['/site/admin-page-proper-names'],'options' => ['id' => 'wn_history']],
-								]
-							],
+							'items'=>[
+								['label' => 'Таблица пользователей', 'url' => ['/site/admin-page-users'],'options' => ['id' => 'wn_history']],
+								['label' => 'Таблица категорий', 'url' => ['/site/admin-page-categories'],'options' => ['id' => 'wn_history']],
+								['label' => 'Таблица Имен собственных', 'url' => ['/site/admin-page-proper-names'],'options' => ['id' => 'wn_history']],
+							]
+						]: ''
+							,
 						]])
 					?>
 				</div>

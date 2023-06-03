@@ -55,7 +55,6 @@ async function documentActions(e) {
 						child.innerText = "";
 						inp = document.createElement("input");
 						inp.name = editFields[i].name;
-						// Если поле является user_id отключаем его для редактирования
 						if (inp.name == "user_id") {
 							inp.disabled = true;
 						}
@@ -64,36 +63,6 @@ async function documentActions(e) {
 						inp.classList.add('form-control');
 						child.append(inp);
 						break;
-					// case "select":
-					// 	let list = child.querySelectorAll("ul li");
-					// 	let filter = false;
-					// 	if (child.querySelector('ul') && child.querySelector('ul').hasAttributes('data-filter')) {
-					// 		filter = child.querySelector('ul').getAttribute('data-filter');
-					// 		filter = JSON.parse(filter);
-					// 	}
-					// 	let listValue = {};
-					// 	Array.from(list).map(elem => {
-					// 		listValue[elem.getAttribute("data-id")] = elem.innerText;
-					// 	}, listValue);
-					// 	child.innerHTML = "";
-					// 	let teamplate = document.querySelector("#" + editFields[i].target);
-					// 	let selectClone = teamplate.content.cloneNode(true);
-					// 	Array.from(selectClone.querySelectorAll("option")).map(opt => {
-					// 		if (filter) {
-					// 			if (!filter.includes(+opt.value)) {
-					// 				opt.remove();
-					// 			}
-					// 		}
-					// 		if (listValue.hasOwnProperty(opt.value)) {
-					// 			opt.selected = true;
-					// 		}
-					// 	}, listValue, filter);
-					// 	let select = selectClone.querySelector("select");
-					// 	select.setAttribute("data-value", JSON.stringify(listValue));
-					// 	select.setAttribute("data-filter", JSON.stringify(filter));
-					// 	select.name = editFields[i].name;
-					// 	child.append(select);
-					// 	break;
 					case "textarea":
 						value = child.innerText;
 						child.innerText = "";
@@ -370,17 +339,20 @@ async function documentActions(e) {
 		let listCheckbox = document.querySelectorAll("[data-checkbox]");
 		Array.from(listCheckbox).map(el => el.checked = status);
 	}
+	try {
+		if (targetElement.closest("[type='checkbox']")) {
+			let status = true;
+			let allCheckbox = document.querySelector("[data-select-all]");
+			let listCheckBox = document.querySelectorAll("[data-checkbox]");
+			Array.from(listCheckBox).map(el => {
+				if (!el.checked) {
+					status = false;
+				}
+			}, status);
+			allCheckbox.checked = status;
+		}
+	} catch {
 
-	if (targetElement.closest("[type='checkbox']")) {
-		let status = true;
-		let allCheckbox = document.querySelector("[data-select-all]");
-		let listCheckBox = document.querySelectorAll("[data-checkbox]");
-		Array.from(listCheckBox).map(el => {
-			if (!el.checked) {
-				status = false;
-			}
-		}, status);
-		allCheckbox.checked = status;
 	}
 }
 
